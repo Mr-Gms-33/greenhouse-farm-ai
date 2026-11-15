@@ -1,0 +1,45 @@
+# Environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+htmlcov/
+.coverage
+
+# Node
+node_modules/
+dist/
+coverage/
+.vite/
+playwright-report/
+test-results/
+
+# Databases and local state
+*.db
+*.sqlite
+*.sqlite3
+postgres-data/
+
+# IDE and operating system
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Local artifacts
+*.log
+tmp/
+artifacts/
+
+# Local legacy prototype; not part of the approved MVP baseline
+alfilaha_pro.html
