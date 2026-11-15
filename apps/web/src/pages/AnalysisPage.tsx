@@ -15,6 +15,13 @@ function estimateRows(analysis: AnalysisRecord | null): Array<Record<string, unk
   return extractArray(monthly);
 }
 
+function analysisStateClass(state: unknown): string {
+  const value = String(state ?? "");
+  if (value === "ready") return "badge badge-green";
+  if (value === "insufficient_data") return "badge badge-amber";
+  return "badge badge-gray";
+}
+
 export function AnalysisPage(): JSX.Element {
   const { t, i18n } = useTranslation();
   const { token } = useAuth();
@@ -93,73 +100,114 @@ export function AnalysisPage(): JSX.Element {
 
   return (
     <section className="stack">
-      <h1>{t("analysis.title")}</h1>
-      <form className="form-grid" onSubmit={onGenerate}>
-        <label>
-          {t("forms.endMonth")}
-          <input type="month" value={endMonth} onChange={(event) => setEndMonth(event.target.value)} required />
-        </label>
-        <button type="submit" disabled={submitting}>
-          {t("actions.generate")}
-        </button>
-      </form>
+      <p className="page-intro">{t("analysis.title")}</p>
       {error ? <ErrorState message={error} /> : null}
+
+      <div className="card">
+        <div className="card-header">
+          <div className="card-title">{t("actions.generate")}</div>
+        </div>
+        <div className="card-body">
+          <form className="form-grid" onSubmit={onGenerate}>
+            <div className="form-group">
+              <label htmlFor="an-end-month">{t("forms.endMonth")}</label>
+              <input
+                id="an-end-month"
+                type="month"
+                value={endMonth}
+                onChange={(event) => setEndMonth(event.target.value)}
+                required
+              />
+            </div>
+            <div className="form-actions">
+              <button className="btn btn-primary" type="submit" disabled={submitting}>
+                {t("actions.generate")}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
       {loading ? <LoadingState /> : null}
       {!loading && records.length === 0 ? <EmptyState /> : null}
+
       {records.length > 0 ? (
-        <label>
-          {t("analysis.view")}
-          <select value={selectedId} onChange={(event) => setSelectedId(event.target.value)}>
-            {records.map((item) => (
-              <option key={String(item.id)} value={String(item.id)}>
-                {String(item.cutoff_month ?? item.id)}
-              </option>
-            ))}
-          </select>
-        </label>
+        <div className="card">
+          <div className="card-header">
+            <div className="card-title">{t("analysis.view")}</div>
+          </div>
+          <div className="card-body">
+            <div className="form-group">
+              <label htmlFor="an-select">{t("analysis.view")}</label>
+              <select id="an-select" value={selectedId} onChange={(event) => setSelectedId(event.target.value)}>
+                {records.map((item) => (
+                  <option key={String(item.id)} value={String(item.id)}>
+                    {String(item.cutoff_month ?? item.id)}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </div>
       ) : null}
+
       {detail ? (
         <>
-          <div className="cards">
-            <article className="card">
-              <h2>{t("analysis.state")}</h2>
-              <p>{String(detail.state ?? "-")}</p>
+          <div className="stats-grid">
+            <article className="stat-card green">
+              <div className="stat-label">{t("analysis.state")}</div>
+              <div className="stat-value">
+                {detail.state ? (
+                  <span className={analysisStateClass(detail.state)}>{String(detail.state)}</span>
+                ) : (
+                  "-"
+                )}
+              </div>
             </article>
-            <article className="card">
-              <h2>{t("analysis.modelVersion")}</h2>
-              <p>{String(detail.model_version ?? "-")}</p>
+            <article className="stat-card blue">
+              <div className="stat-label">{t("analysis.modelVersion")}</div>
+              <div className="stat-value">{String(detail.model_version ?? "-")}</div>
             </article>
-            <article className="card">
-              <h2>{t("analysis.generatedAt")}</h2>
-              <p>{String(detail.generated_at ?? "-")}</p>
+            <article className="stat-card earth">
+              <div className="stat-label">{t("analysis.generatedAt")}</div>
+              <div className="stat-value">{String(detail.generated_at ?? "-")}</div>
             </article>
-            <article className="card">
-              <h2>{t("analysis.horizon")}</h2>
-              <p>{String((detail.forecast as Record<string, unknown> | undefined)?.horizon_months ?? "-")}</p>
+            <article className="stat-card amber">
+              <div className="stat-label">{t("analysis.horizon")}</div>
+              <div className="stat-value">
+                {String((detail.forecast as Record<string, unknown> | undefined)?.horizon_months ?? "-")}
+              </div>
             </article>
           </div>
 
           <div className="card">
-            <h2>{t("analysis.facts")}</h2>
-            <p>
-              {t("dashboard.revenue")}: {formatCurrency(Number(facts.revenue ?? 0))}
-            </p>
-            <p>
-              {t("dashboard.expenses")}: {formatCurrency(Number(facts.expenses ?? 0))}
-            </p>
-            <p>
-              {t("dashboard.profit")}: {formatCurrency(Number(facts.profit ?? 0))}
-            </p>
-            <p>
-              {t("analysis.coverage")}: {String((detail.coverage as Record<string, unknown> | undefined)?.month_count ?? "-")}
-            </p>
+            <div className="card-header">
+              <div className="card-title">{t("analysis.facts")}</div>
+            </div>
+            <div className="card-body">
+              <p>
+                {t("dashboard.revenue")}: {formatCurrency(Number(facts.revenue ?? 0))}
+              </p>
+              <p>
+                {t("dashboard.expenses")}: {formatCurrency(Number(facts.expenses ?? 0))}
+              </p>
+              <p>
+                {t("dashboard.profit")}: {formatCurrency(Number(facts.profit ?? 0))}
+              </p>
+              <p>
+                {t("analysis.coverage")}:{" "}
+                {String((detail.coverage as Record<string, unknown> | undefined)?.month_count ?? "-")}
+              </p>
+            </div>
           </div>
 
           <div className="card">
-            <h2>{t("analysis.estimates")}</h2>
-            {String(detail.state) === "insufficient_data" ? <p>{t("analysis.insufficientDataBody")}</p> : null}
-            <p className="estimate-label">{t("analysis.estimateLabel")}</p>
-            {estimates.length ? (
+            <div className="card-header">
+              <div className="card-title">{t("analysis.estimates")}</div>
+            </div>
+            <div className="card-body">
+              {String(detail.state) === "insufficient_data" ? <p>{t("analysis.insufficientDataBody")}</p> : null}
+              <p className="estimate-label">{t("analysis.estimateLabel")}</p>
               <div className="table-wrap">
                 <table>
                   <thead>
@@ -171,23 +219,33 @@ export function AnalysisPage(): JSX.Element {
                     </tr>
                   </thead>
                   <tbody>
-                    {estimates.map((row) => (
-                      <tr key={String(row.month)}>
-                        <td>{String(row.month ?? "-")}</td>
-                        <td>{formatCurrency(Number(row.revenue ?? 0))}</td>
-                        <td>{formatCurrency(Number(row.expenses ?? 0))}</td>
-                        <td>{formatCurrency(Number(row.profit ?? 0))}</td>
+                    {estimates.length > 0 ? (
+                      estimates.map((row) => (
+                        <tr key={String(row.month)}>
+                          <td>{String(row.month ?? "-")}</td>
+                          <td className="td-num">{formatCurrency(Number(row.revenue ?? 0))}</td>
+                          <td className="td-num">{formatCurrency(Number(row.expenses ?? 0))}</td>
+                          <td className="td-num">{formatCurrency(Number(row.profit ?? 0))}</td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr className="empty-row">
+                        <td colSpan={4}>{t("status.empty")}</td>
                       </tr>
-                    ))}
+                    )}
                   </tbody>
                 </table>
               </div>
-            ) : null}
+            </div>
           </div>
 
           <div className="card">
-            <h2>{t("analysis.narrative")}</h2>
-            <p>{String(narrative || "-")}</p>
+            <div className="card-header">
+              <div className="card-title">{t("analysis.narrative")}</div>
+            </div>
+            <div className="card-body">
+              <p>{String(narrative || "-")}</p>
+            </div>
           </div>
         </>
       ) : null}

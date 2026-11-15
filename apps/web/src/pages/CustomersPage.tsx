@@ -61,48 +61,69 @@ export function CustomersPage(): JSX.Element {
 
   return (
     <section className="stack">
-      <h1>{t("entities.customers")}</h1>
-      {canWrite ? (
-        <form className="form-grid" onSubmit={onSubmit}>
-          <label>
-            {t("forms.name")}
-            <input
-              value={form.name}
-              onChange={(event) => setForm((prev) => ({ ...prev, name: event.target.value }))}
-              required
-            />
-          </label>
-          <label>
-            {t("forms.contactRef")}
-            <input
-              value={form.contact_ref}
-              onChange={(event) => setForm((prev) => ({ ...prev, contact_ref: event.target.value }))}
-            />
-          </label>
-          <button type="submit">{t("actions.create")}</button>
-        </form>
-      ) : null}
+      <p className="page-intro">{t("entities.customers")}</p>
       {error ? <ErrorState message={error} /> : null}
+
+      {canWrite ? (
+        <div className="card">
+          <div className="card-header">
+            <div className="card-title">{t("actions.create")}</div>
+          </div>
+          <div className="card-body">
+            <form className="form-grid" onSubmit={onSubmit}>
+              <div className="form-group">
+                <label htmlFor="cu-name">{t("forms.name")}</label>
+                <input
+                  id="cu-name"
+                  value={form.name}
+                  onChange={(event) => setForm((prev) => ({ ...prev, name: event.target.value }))}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="cu-contact">{t("forms.contactRef")}</label>
+                <input
+                  id="cu-contact"
+                  value={form.contact_ref}
+                  onChange={(event) => setForm((prev) => ({ ...prev, contact_ref: event.target.value }))}
+                />
+              </div>
+              <div className="form-actions">
+                <button className="btn btn-primary" type="submit">
+                  {t("actions.create")}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      ) : null}
+
       {loading ? <LoadingState /> : null}
       {!loading && records.length === 0 ? <EmptyState /> : null}
-      {records.length > 0 ? (
-        <div className="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>{t("forms.name")}</th>
-                <th>{t("forms.contactRef")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {records.map((item) => (
-                <tr key={String(item.id)}>
-                  <td>{String(item.name ?? "-")}</td>
-                  <td>{String(item.contact_ref ?? "-")}</td>
+
+      {!loading && records.length > 0 ? (
+        <div className="card">
+          <div className="card-header">
+            <div className="card-title">{t("entities.customers")}</div>
+          </div>
+          <div className="card-body table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>{t("forms.name")}</th>
+                  <th>{t("forms.contactRef")}</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {records.map((item) => (
+                  <tr key={String(item.id)}>
+                    <td>{String(item.name ?? "-")}</td>
+                    <td>{String(item.contact_ref ?? "-")}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       ) : null}
     </section>

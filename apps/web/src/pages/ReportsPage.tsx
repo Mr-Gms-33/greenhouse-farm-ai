@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { request, toErrorMessage } from "../api";
 import { useAuth } from "../auth";
-import { ErrorState } from "../components/Status";
+import { ErrorState, LoadingState } from "../components/Status";
 import { extractArray, formatCurrency, marginLabel } from "../utils";
 
 type ReportState = {
@@ -56,88 +56,166 @@ export function ReportsPage(): JSX.Element {
 
   return (
     <section className="stack">
-      <h1>{t("reports.title")}</h1>
-      <form className="form-grid" onSubmit={onLoad}>
-        <label>
-          {t("reports.from")}
-          <input type="date" value={from} onChange={(event) => setFrom(event.target.value)} required />
-        </label>
-        <label>
-          {t("reports.to")}
-          <input type="date" value={to} onChange={(event) => setTo(event.target.value)} required />
-        </label>
-        <button type="submit" disabled={loading}>
-          {t("actions.refresh")}
-        </button>
-      </form>
+      <p className="page-intro">{t("reports.title")}</p>
       {error ? <ErrorState message={error} /> : null}
+
+      <div className="card">
+        <div className="card-header">
+          <div className="card-title">{t("actions.refresh")}</div>
+        </div>
+        <div className="card-body">
+          <form className="form-grid" onSubmit={onLoad}>
+            <div className="form-group">
+              <label htmlFor="rp-from">{t("reports.from")}</label>
+              <input
+                id="rp-from"
+                type="date"
+                value={from}
+                onChange={(event) => setFrom(event.target.value)}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="rp-to">{t("reports.to")}</label>
+              <input id="rp-to" type="date" value={to} onChange={(event) => setTo(event.target.value)} required />
+            </div>
+            <div className="form-actions">
+              <button className="btn btn-primary" type="submit" disabled={loading}>
+                {t("actions.refresh")}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      {loading ? <LoadingState /> : null}
+
       {reports.summary ? (
-        <div className="cards">
-          <article className="card">
-            <h2>{t("dashboard.revenue")}</h2>
-            <p>{formatCurrency(Number(reports.summary.revenue ?? 0))}</p>
+        <div className="stats-grid">
+          <article className="stat-card green">
+            <div className="stat-label">{t("dashboard.revenue")}</div>
+            <div className="stat-value">{formatCurrency(Number(reports.summary.revenue ?? 0))}</div>
           </article>
-          <article className="card">
-            <h2>{t("dashboard.expenses")}</h2>
-            <p>{formatCurrency(Number(reports.summary.expenses ?? 0))}</p>
+          <article className="stat-card amber">
+            <div className="stat-label">{t("dashboard.expenses")}</div>
+            <div className="stat-value">{formatCurrency(Number(reports.summary.expenses ?? 0))}</div>
           </article>
-          <article className="card">
-            <h2>{t("dashboard.profit")}</h2>
-            <p>{formatCurrency(Number(reports.summary.profit ?? 0))}</p>
+          <article className="stat-card blue">
+            <div className="stat-label">{t("dashboard.profit")}</div>
+            <div className="stat-value">{formatCurrency(Number(reports.summary.profit ?? 0))}</div>
           </article>
-          <article className="card">
-            <h2>{t("dashboard.margin")}</h2>
-            <p>
+          <article className="stat-card earth">
+            <div className="stat-label">{t("dashboard.margin")}</div>
+            <div className="stat-value">
               {reports.summary.margin === null
                 ? t("reports.marginNA")
                 : marginLabel(Number(reports.summary.margin ?? 0))}
-            </p>
+            </div>
           </article>
         </div>
       ) : null}
-      <div className="table-wrap">
-        <h2>{t("reports.byMonth")}</h2>
-        <table>
-          <tbody>
-            {reports.byMonth.map((row) => (
-              <tr key={String(row.month ?? row.id)}>
-                <td>{String(row.month ?? "-")}</td>
-                <td>{formatCurrency(Number(row.revenue ?? 0))}</td>
-                <td>{formatCurrency(Number(row.expenses ?? 0))}</td>
-                <td>{formatCurrency(Number(row.profit ?? 0))}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <div className="table-wrap">
-        <h2>{t("reports.byGreenhouse")}</h2>
-        <table>
-          <tbody>
-            {reports.byGreenhouse.map((row) => (
-              <tr key={String(row.greenhouse_id ?? row.id)}>
-                <td>{String(row.greenhouse_name ?? row.greenhouse_id ?? "-")}</td>
-                <td>{formatCurrency(Number(row.revenue ?? 0))}</td>
-                <td>{formatCurrency(Number(row.expenses ?? 0))}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <div className="table-wrap">
-        <h2>{t("reports.byCrop")}</h2>
-        <table>
-          <tbody>
-            {reports.byCrop.map((row) => (
-              <tr key={String(row.crop ?? row.id)}>
-                <td>{row.crop ? t(`crops.${String(row.crop)}`) : "-"}</td>
-                <td>{formatCurrency(Number(row.revenue ?? 0))}</td>
-                <td>{formatCurrency(Number(row.expenses ?? 0))}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+
+      {reports.summary ? (
+        <>
+          <div className="card">
+            <div className="card-header">
+              <div className="card-title">{t("reports.byMonth")}</div>
+            </div>
+            <div className="card-body table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>{t("forms.month")}</th>
+                    <th>{t("dashboard.revenue")}</th>
+                    <th>{t("dashboard.expenses")}</th>
+                    <th>{t("dashboard.profit")}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {reports.byMonth.length > 0 ? (
+                    reports.byMonth.map((row) => (
+                      <tr key={String(row.month ?? row.id)}>
+                        <td>{String(row.month ?? "-")}</td>
+                        <td className="td-num">{formatCurrency(Number(row.revenue ?? 0))}</td>
+                        <td className="td-num">{formatCurrency(Number(row.expenses ?? 0))}</td>
+                        <td className="td-num">{formatCurrency(Number(row.profit ?? 0))}</td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr className="empty-row">
+                      <td colSpan={4}>{t("status.empty")}</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div className="card">
+            <div className="card-header">
+              <div className="card-title">{t("reports.byGreenhouse")}</div>
+            </div>
+            <div className="card-body table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>{t("forms.greenhouse")}</th>
+                    <th>{t("dashboard.revenue")}</th>
+                    <th>{t("dashboard.expenses")}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {reports.byGreenhouse.length > 0 ? (
+                    reports.byGreenhouse.map((row) => (
+                      <tr key={String(row.greenhouse_id ?? row.id)}>
+                        <td>{String(row.greenhouse_name ?? row.greenhouse_id ?? "-")}</td>
+                        <td className="td-num">{formatCurrency(Number(row.revenue ?? 0))}</td>
+                        <td className="td-num">{formatCurrency(Number(row.expenses ?? 0))}</td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr className="empty-row">
+                      <td colSpan={3}>{t("status.empty")}</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div className="card">
+            <div className="card-header">
+              <div className="card-title">{t("reports.byCrop")}</div>
+            </div>
+            <div className="card-body table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>{t("forms.crop")}</th>
+                    <th>{t("dashboard.revenue")}</th>
+                    <th>{t("dashboard.expenses")}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {reports.byCrop.length > 0 ? (
+                    reports.byCrop.map((row) => (
+                      <tr key={String(row.crop ?? row.id)}>
+                        <td>{row.crop ? t(`crops.${String(row.crop)}`) : "-"}</td>
+                        <td className="td-num">{formatCurrency(Number(row.revenue ?? 0))}</td>
+                        <td className="td-num">{formatCurrency(Number(row.expenses ?? 0))}</td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr className="empty-row">
+                      <td colSpan={3}>{t("status.empty")}</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </>
+      ) : null}
     </section>
   );
 }
