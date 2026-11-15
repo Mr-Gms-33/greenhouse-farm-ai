@@ -47,9 +47,12 @@ scaffold issue is closed.
 
 ## Public delivery
 
-Implementation is managed through public GitHub issues. Each issue is groomed by
-the Product Manager, implemented by the Software Engineer, independently checked
-by QA, and closed by the Orchestrator only after evidence-backed PASS.
+Implementation is managed through the
+[public issues](https://github.com/Mr-Gms-33/greenhouse-farm-ai/issues) and
+[MVP v1 milestone](https://github.com/Mr-Gms-33/greenhouse-farm-ai/milestone/1).
+Each issue is groomed by the Product Manager, implemented by the Software
+Engineer, independently checked by QA, and closed by the Orchestrator only after
+evidence-backed PASS.
 
 ## License
 

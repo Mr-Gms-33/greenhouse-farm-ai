@@ -566,4 +566,4 @@ Keep explicitly deferred ideas visible without expanding the focused MVP.
 
 Write-Output "Tracker ready: https://github.com/$repo/issues"
 Write-Output "MVP milestone: https://github.com/$repo/milestone/1"
-Write-Output "Created or retained $($issue.Count) ordered MVP issues and one future epic."
+Write-Output "Created or retained 15 ordered MVP issues and one future epic."
