@@ -85,76 +85,99 @@ export function HarvestsPage(): JSX.Element {
 
   return (
     <section className="stack">
-      <h1>{t("entities.harvests")}</h1>
-      {canWrite ? (
-        <form className="form-grid" onSubmit={onSubmit}>
-          <label>
-            {t("forms.cycleStatus")}
-            <select
-              value={form.crop_cycle_id}
-              onChange={(event) => setForm((prev) => ({ ...prev, crop_cycle_id: event.target.value }))}
-              required
-            >
-              {cycles.map((item) => (
-                <option key={String(item.id)} value={String(item.id)}>
-                  {String(item.id)} - {item.crop ? t(`crops.${String(item.crop)}`) : "-"}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label>
-            {t("forms.harvestDate")}
-            <input
-              type="date"
-              value={form.harvest_date}
-              onChange={(event) => setForm((prev) => ({ ...prev, harvest_date: event.target.value }))}
-              required
-            />
-          </label>
-          <label>
-            {t("forms.quantityKg")}
-            <input
-              type="number"
-              min={0.01}
-              step={0.01}
-              value={form.quantity_kg}
-              onChange={(event) => setForm((prev) => ({ ...prev, quantity_kg: event.target.value }))}
-              required
-            />
-          </label>
-          <label>
-            {t("forms.qualityGrade")}
-            <input
-              value={form.quality_grade}
-              onChange={(event) => setForm((prev) => ({ ...prev, quality_grade: event.target.value }))}
-            />
-          </label>
-          <button type="submit">{t("actions.create")}</button>
-        </form>
-      ) : null}
+      <p className="page-intro">{t("entities.harvests")}</p>
       {error ? <ErrorState message={error} /> : null}
+
+      {canWrite ? (
+        <div className="card">
+          <div className="card-header">
+            <div className="card-title">{t("actions.create")}</div>
+          </div>
+          <div className="card-body">
+            <form className="form-grid" onSubmit={onSubmit}>
+              <div className="form-group">
+                <label htmlFor="hv-cycle">{t("forms.cycleStatus")}</label>
+                <select
+                  id="hv-cycle"
+                  value={form.crop_cycle_id}
+                  onChange={(event) => setForm((prev) => ({ ...prev, crop_cycle_id: event.target.value }))}
+                  required
+                >
+                  {cycles.map((item) => (
+                    <option key={String(item.id)} value={String(item.id)}>
+                      {String(item.id)} - {item.crop ? t(`crops.${String(item.crop)}`) : "-"}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group">
+                <label htmlFor="hv-date">{t("forms.harvestDate")}</label>
+                <input
+                  id="hv-date"
+                  type="date"
+                  value={form.harvest_date}
+                  onChange={(event) => setForm((prev) => ({ ...prev, harvest_date: event.target.value }))}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="hv-qty">{t("forms.quantityKg")}</label>
+                <input
+                  id="hv-qty"
+                  type="number"
+                  min={0.01}
+                  step={0.01}
+                  value={form.quantity_kg}
+                  onChange={(event) => setForm((prev) => ({ ...prev, quantity_kg: event.target.value }))}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="hv-grade">{t("forms.qualityGrade")}</label>
+                <input
+                  id="hv-grade"
+                  value={form.quality_grade}
+                  onChange={(event) => setForm((prev) => ({ ...prev, quality_grade: event.target.value }))}
+                />
+              </div>
+              <div className="form-actions">
+                <button className="btn btn-primary" type="submit">
+                  {t("actions.create")}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      ) : null}
+
       {loading ? <LoadingState /> : null}
       {!loading && records.length === 0 ? <EmptyState /> : null}
-      {records.length > 0 ? (
-        <div className="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>{t("forms.harvestDate")}</th>
-                <th>{t("forms.quantityKg")}</th>
-                <th>{t("forms.cycleStatus")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {records.map((item) => (
-                <tr key={String(item.id)}>
-                  <td>{String(item.harvest_date ?? "-")}</td>
-                  <td>{String(item.quantity_kg ?? "-")}</td>
-                  <td>{String(item.crop_cycle_id ?? "-")}</td>
+
+      {!loading && records.length > 0 ? (
+        <div className="card">
+          <div className="card-header">
+            <div className="card-title">{t("entities.harvests")}</div>
+          </div>
+          <div className="card-body table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>{t("forms.harvestDate")}</th>
+                  <th>{t("forms.quantityKg")}</th>
+                  <th>{t("forms.cycleStatus")}</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {records.map((item) => (
+                  <tr key={String(item.id)}>
+                    <td>{String(item.harvest_date ?? "-")}</td>
+                    <td className="td-num">{String(item.quantity_kg ?? "-")}</td>
+                    <td>{String(item.crop_cycle_id ?? "-")}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       ) : null}
     </section>

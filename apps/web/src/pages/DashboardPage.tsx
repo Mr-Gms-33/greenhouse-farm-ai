@@ -5,6 +5,13 @@ import { useAuth } from "../auth";
 import { ErrorState, LoadingState } from "../components/Status";
 import { formatCurrency, marginLabel } from "../utils";
 
+type Finance = {
+  revenue?: string | number;
+  expenses?: string | number;
+  profit?: string | number;
+  margin_percent?: string | number | null;
+};
+
 export function DashboardPage(): JSX.Element {
   const { t } = useTranslation();
   const { token, user } = useAuth();
@@ -32,52 +39,93 @@ export function DashboardPage(): JSX.Element {
   if (loading) return <LoadingState />;
   if (error) return <ErrorState message={error} />;
 
-  const activeGreenhouses = Number(data?.active_greenhouses ?? 0);
-  const activeCropCycles = Number(data?.active_crop_cycles ?? 0);
-  const revenue = Number(data?.revenue ?? 0);
-  const expenses = Number(data?.expenses ?? 0);
-  const profit = Number(data?.profit ?? 0);
-  const margin = data?.margin !== null && data?.margin !== undefined ? Number(data.margin) : null;
+  const greenhouses = Array.isArray(data?.greenhouses) ? data.greenhouses : [];
+  const cycles = Array.isArray(data?.crop_cycles) ? data.crop_cycles : [];
+  const activeGreenhouses = greenhouses.filter((g) => (g as { status?: string }).status === "active").length;
+  const activeCropCycles = cycles.filter((c) => (c as { status?: string }).status === "active").length;
+  const harvestTotal = String(data?.harvest_total_kg ?? "0");
+  const finance = (data?.finance as Finance | undefined) ?? {};
+  const showFinance = user?.role !== "manager";
 
   return (
     <section className="stack">
-      <h1>{t("dashboard.title")}</h1>
-      <p className="muted">
+      <p className="page-intro">
         {user?.role === "owner"
           ? t("dashboard.ownerHint")
           : user?.role === "manager"
             ? t("dashboard.managerHint")
             : t("dashboard.accountantHint")}
       </p>
-      <div className="cards">
-        <article className="card">
-          <h2>{t("dashboard.activeGreenhouses")}</h2>
-          <p>{activeGreenhouses}</p>
+
+      <div className="stats-grid">
+        <article className="stat-card green">
+          <div className="stat-label">{t("dashboard.activeGreenhouses")}</div>
+          <div className="stat-value">{activeGreenhouses}</div>
         </article>
-        <article className="card">
-          <h2>{t("dashboard.activeCropCycles")}</h2>
-          <p>{activeCropCycles}</p>
+        <article className="stat-card blue">
+          <div className="stat-label">{t("dashboard.activeCropCycles")}</div>
+          <div className="stat-value">{activeCropCycles}</div>
         </article>
-        {user?.role !== "manager" ? (
+        <article className="stat-card earth">
+          <div className="stat-label">{t("dashboard.harvestTotal")}</div>
+          <div className="stat-value">
+            {harvestTotal} <span className="unit">kg</span>
+          </div>
+        </article>
+        {showFinance ? (
           <>
-            <article className="card">
-              <h2>{t("dashboard.revenue")}</h2>
-              <p>{formatCurrency(revenue)}</p>
+            <article className="stat-card green">
+              <div className="stat-label">{t("dashboard.revenue")}</div>
+              <div className="stat-value">{formatCurrency(Number(finance.revenue ?? 0))}</div>
             </article>
-            <article className="card">
-              <h2>{t("dashboard.expenses")}</h2>
-              <p>{formatCurrency(expenses)}</p>
+            <article className="stat-card amber">
+              <div className="stat-label">{t("dashboard.expenses")}</div>
+              <div className="stat-value">{formatCurrency(Number(finance.expenses ?? 0))}</div>
             </article>
-            <article className="card">
-              <h2>{t("dashboard.profit")}</h2>
-              <p>{formatCurrency(profit)}</p>
-            </article>
-            <article className="card">
-              <h2>{t("dashboard.margin")}</h2>
-              <p>{margin === null ? t("reports.marginNA") : marginLabel(margin)}</p>
+            <article className="stat-card blue">
+              <div className="stat-label">{t("dashboard.profit")}</div>
+              <div className="stat-value">{formatCurrency(Number(finance.profit ?? 0))}</div>
+              <div className="stat-sub">
+                {t("dashboard.margin")}:{" "}
+                {finance.margin_percent === null || finance.margin_percent === undefined
+                  ? t("reports.marginNA")
+                  : marginLabel(Number(finance.margin_percent))}
+              </div>
             </article>
           </>
         ) : null}
+      </div>
+
+      <div className="card">
+        <div className="card-header">
+          <div className="card-title">{t("dashboard.recentActivity")}</div>
+        </div>
+        <div className="card-body table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>{t("forms.date")}</th>
+                <th>{t("dashboard.activity")}</th>
+                <th>{t("forms.quantity")}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Array.isArray(data?.recent_harvests) && data.recent_harvests.length > 0 ? (
+                (data.recent_harvests as Array<Record<string, unknown>>).map((h) => (
+                  <tr key={String(h.id)}>
+                    <td>{String(h.harvest_date ?? "")}</td>
+                    <td>{t("nav.harvests")}</td>
+                    <td className="td-num">{String(h.quantity_kg ?? "")} kg</td>
+                  </tr>
+                ))
+              ) : (
+                <tr className="empty-row">
+                  <td colSpan={3}>{t("status.empty")}</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </section>
   );

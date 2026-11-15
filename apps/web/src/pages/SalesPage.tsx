@@ -112,110 +112,139 @@ export function SalesPage(): JSX.Element {
 
   return (
     <section className="stack">
-      <h1>{t("entities.sales")}</h1>
-      {canWrite ? (
-        <form className="form-grid" onSubmit={onSubmit}>
-          <label>
-            {t("forms.saleDate")}
-            <input
-              type="date"
-              value={form.sale_date}
-              onChange={(event) => setForm((prev) => ({ ...prev, sale_date: event.target.value }))}
-              required
-            />
-          </label>
-          <label>
-            {t("forms.customer")}
-            <select
-              value={form.customer_id}
-              onChange={(event) => setForm((prev) => ({ ...prev, customer_id: event.target.value }))}
-              required
-            >
-              {customers.map((item) => (
-                <option key={String(item.id)} value={String(item.id)}>
-                  {String(item.name ?? item.id)}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label>
-            {t("forms.crop")}
-            <select
-              value={form.crop_cycle_id}
-              onChange={(event) => setForm((prev) => ({ ...prev, crop_cycle_id: event.target.value }))}
-              required
-            >
-              {cycles.map((item) => (
-                <option key={String(item.id)} value={String(item.id)}>
-                  {String(item.id)} - {item.crop ? t(`crops.${String(item.crop)}`) : ""}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label>
-            {t("forms.quantityKg")}
-            <input
-              type="number"
-              min={0.01}
-              step={0.01}
-              value={form.quantity_kg}
-              onChange={(event) => setForm((prev) => ({ ...prev, quantity_kg: event.target.value }))}
-              required
-            />
-          </label>
-          <label>
-            {t("forms.unitPriceMad")}
-            <input
-              type="number"
-              min={0}
-              step={0.01}
-              value={form.unit_price_mad}
-              onChange={(event) => setForm((prev) => ({ ...prev, unit_price_mad: event.target.value }))}
-              required
-            />
-          </label>
-          <label>
-            {t("forms.channel")}
-            <select
-              value={form.channel}
-              onChange={(event) => setForm((prev) => ({ ...prev, channel: event.target.value as SaleForm["channel"] }))}
-            >
-              {["wholesaler", "market", "distributor", "other"].map((channel) => (
-                <option key={channel} value={channel}>
-                  {t(`channels.${channel}`)}
-                </option>
-              ))}
-            </select>
-          </label>
-          <p>
-            {t("forms.totalMad")}: <strong>{formatCurrency(computedTotal)}</strong>
-          </p>
-          <button type="submit">{t("actions.create")}</button>
-        </form>
-      ) : null}
+      <p className="page-intro">{t("entities.sales")}</p>
       {error ? <ErrorState message={error} /> : null}
+
+      {canWrite ? (
+        <div className="card">
+          <div className="card-header">
+            <div className="card-title">{t("actions.create")}</div>
+          </div>
+          <div className="card-body">
+            <form className="form-grid" onSubmit={onSubmit}>
+              <div className="form-group">
+                <label htmlFor="sl-date">{t("forms.saleDate")}</label>
+                <input
+                  id="sl-date"
+                  type="date"
+                  value={form.sale_date}
+                  onChange={(event) => setForm((prev) => ({ ...prev, sale_date: event.target.value }))}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="sl-customer">{t("forms.customer")}</label>
+                <select
+                  id="sl-customer"
+                  value={form.customer_id}
+                  onChange={(event) => setForm((prev) => ({ ...prev, customer_id: event.target.value }))}
+                  required
+                >
+                  {customers.map((item) => (
+                    <option key={String(item.id)} value={String(item.id)}>
+                      {String(item.name ?? item.id)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group">
+                <label htmlFor="sl-cycle">{t("forms.crop")}</label>
+                <select
+                  id="sl-cycle"
+                  value={form.crop_cycle_id}
+                  onChange={(event) => setForm((prev) => ({ ...prev, crop_cycle_id: event.target.value }))}
+                  required
+                >
+                  {cycles.map((item) => (
+                    <option key={String(item.id)} value={String(item.id)}>
+                      {String(item.id)} - {item.crop ? t(`crops.${String(item.crop)}`) : ""}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group">
+                <label htmlFor="sl-qty">{t("forms.quantityKg")}</label>
+                <input
+                  id="sl-qty"
+                  type="number"
+                  min={0.01}
+                  step={0.01}
+                  value={form.quantity_kg}
+                  onChange={(event) => setForm((prev) => ({ ...prev, quantity_kg: event.target.value }))}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="sl-price">{t("forms.unitPriceMad")}</label>
+                <input
+                  id="sl-price"
+                  type="number"
+                  min={0}
+                  step={0.01}
+                  value={form.unit_price_mad}
+                  onChange={(event) => setForm((prev) => ({ ...prev, unit_price_mad: event.target.value }))}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="sl-channel">{t("forms.channel")}</label>
+                <select
+                  id="sl-channel"
+                  value={form.channel}
+                  onChange={(event) =>
+                    setForm((prev) => ({ ...prev, channel: event.target.value as SaleForm["channel"] }))
+                  }
+                >
+                  {["wholesaler", "market", "distributor", "other"].map((channel) => (
+                    <option key={channel} value={channel}>
+                      {t(`channels.${channel}`)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group form-full">
+                <span>
+                  {t("forms.totalMad")}: <strong>{formatCurrency(computedTotal)}</strong>
+                </span>
+              </div>
+              <div className="form-actions">
+                <button className="btn btn-primary" type="submit">
+                  {t("actions.create")}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      ) : null}
+
       {loading ? <LoadingState /> : null}
       {!loading && records.length === 0 ? <EmptyState /> : null}
-      {records.length > 0 ? (
-        <div className="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>{t("forms.saleDate")}</th>
-                <th>{t("forms.customer")}</th>
-                <th>{t("forms.totalMad")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {records.map((item) => (
-                <tr key={String(item.id)}>
-                  <td>{String(item.sale_date ?? "-")}</td>
-                  <td>{String(item.customer_name ?? item.customer_id ?? "-")}</td>
-                  <td>{formatCurrency(Number(item.total ?? item.total_mad ?? 0))}</td>
+
+      {!loading && records.length > 0 ? (
+        <div className="card">
+          <div className="card-header">
+            <div className="card-title">{t("entities.sales")}</div>
+          </div>
+          <div className="card-body table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>{t("forms.saleDate")}</th>
+                  <th>{t("forms.customer")}</th>
+                  <th>{t("forms.totalMad")}</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {records.map((item) => (
+                  <tr key={String(item.id)}>
+                    <td>{String(item.sale_date ?? "-")}</td>
+                    <td>{String(item.customer_name ?? item.customer_id ?? "-")}</td>
+                    <td className="td-num">{formatCurrency(Number(item.total ?? item.total_mad ?? 0))}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       ) : null}
     </section>

@@ -1,5 +1,5 @@
 {
-  "appTitle": "Greenhouse Farm Management",
+  "appTitle": "AlFilaha Pro",
   "actions": {
     "save": "Save",
     "create": "Create",
@@ -26,7 +26,12 @@
     "email": "Email",
     "password": "Password",
     "submit": "Sign in",
-    "error": "Invalid credentials or account inactive."
+    "error": "Invalid credentials or account inactive.",
+    "subtitle": "Sign in to manage greenhouses, harvests, and finances.",
+    "demoTitle": "Demo accounts",
+    "demoOwner": "Owner",
+    "demoManager": "Manager",
+    "demoAccountant": "Accountant"
   },
   "status": {
     "loading": "Loading...",
@@ -48,7 +53,10 @@
     "recentHarvests": "Recent harvests",
     "recentSales": "Recent sales",
     "recentExpenses": "Recent expenses",
-    "latestAnalysis": "Latest analysis"
+    "latestAnalysis": "Latest analysis",
+    "harvestTotal": "Harvest total",
+    "recentActivity": "Recent activity",
+    "activity": "Activity"
   },
   "forms": {
     "name": "Name",
@@ -78,7 +86,9 @@
     "endMonth": "Analysis end month",
     "month": "Month",
     "required": "This field is required.",
-    "positive": "Value must be greater than zero."
+    "positive": "Value must be greater than zero.",
+    "date": "Date",
+    "quantity": "Quantity"
   },
   "entities": {
     "greenhouses": "Greenhouses",
@@ -167,5 +177,14 @@
     "owner": "Owner",
     "manager": "Manager",
     "accountant": "Accountant"
+  },
+  "brand": {
+    "short": "AlFilaha",
+    "tagline": "Greenhouse farm management — Agadir",
+    "footer": "AlFilaha Pro · Morocco greenhouse ERP"
+  },
+  "navSections": {
+    "operations": "Operations",
+    "finance": "Finance"
   }
 }

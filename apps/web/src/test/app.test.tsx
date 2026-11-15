@@ -90,9 +90,10 @@ describe("Greenhouse web app", () => {
     });
 
     renderApp("/");
-    expect(await screen.findByText("Dashboard")).toBeInTheDocument();
-    expect(screen.queryByRole("link", { name: "Financial reports" })).not.toBeInTheDocument();
+    expect(await screen.findByRole("link", { name: "Dashboard" })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Reports" })).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "Financial analysis" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Sales" })).not.toBeInTheDocument();
   });
 
   it("shows estimate label on analysis view", async () => {

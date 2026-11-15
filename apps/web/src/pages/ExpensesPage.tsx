@@ -103,124 +103,149 @@ export function ExpensesPage(): JSX.Element {
 
   return (
     <section className="stack">
-      <h1>{t("entities.expenses")}</h1>
-      {canWrite ? (
-        <form className="form-grid" onSubmit={onSubmit}>
-          <label>
-            {t("forms.expenseDate")}
-            <input
-              type="date"
-              value={form.expense_date}
-              onChange={(event) => setForm((prev) => ({ ...prev, expense_date: event.target.value }))}
-              required
-            />
-          </label>
-          <label>
-            {t("forms.category")}
-            <select
-              value={form.category}
-              onChange={(event) => setForm((prev) => ({ ...prev, category: event.target.value }))}
-            >
-              {[
-                "seeds_plants",
-                "fertilizer",
-                "water",
-                "energy",
-                "labor",
-                "equipment",
-                "maintenance",
-                "transport",
-                "packaging",
-                "other"
-              ].map((category) => (
-                <option key={category} value={category}>
-                  {t(`expenseCategories.${category}`)}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label>
-            {t("forms.amountMad")}
-            <input
-              type="number"
-              min={0.01}
-              step={0.01}
-              value={form.amount_mad}
-              onChange={(event) => setForm((prev) => ({ ...prev, amount_mad: event.target.value }))}
-              required
-            />
-          </label>
-          <label>
-            {t("forms.scope")}
-            <select
-              value={form.scope}
-              onChange={(event) => setForm((prev) => ({ ...prev, scope: event.target.value as ExpenseScope }))}
-            >
-              {["farm", "greenhouse", "crop_cycle"].map((scope) => (
-                <option key={scope} value={scope}>
-                  {t(`scopes.${scope}`)}
-                </option>
-              ))}
-            </select>
-          </label>
-          {form.scope === "greenhouse" ? (
-            <label>
-              {t("forms.greenhouse")}
-              <select
-                value={form.greenhouse_id}
-                onChange={(event) => setForm((prev) => ({ ...prev, greenhouse_id: event.target.value }))}
-              >
-                {greenhouses.map((item) => (
-                  <option key={String(item.id)} value={String(item.id)}>
-                    {String(item.name ?? item.id)}
-                  </option>
-                ))}
-              </select>
-            </label>
-          ) : null}
-          {form.scope === "crop_cycle" ? (
-            <label>
-              {t("forms.crop")}
-              <select
-                value={form.crop_cycle_id}
-                onChange={(event) => setForm((prev) => ({ ...prev, crop_cycle_id: event.target.value }))}
-              >
-                {cycles.map((item) => (
-                  <option key={String(item.id)} value={String(item.id)}>
-                    {String(item.id)}
-                  </option>
-                ))}
-              </select>
-            </label>
-          ) : null}
-          <button type="submit">{t("actions.create")}</button>
-        </form>
-      ) : null}
+      <p className="page-intro">{t("entities.expenses")}</p>
       {error ? <ErrorState message={error} /> : null}
+
+      {canWrite ? (
+        <div className="card">
+          <div className="card-header">
+            <div className="card-title">{t("actions.create")}</div>
+          </div>
+          <div className="card-body">
+            <form className="form-grid" onSubmit={onSubmit}>
+              <div className="form-group">
+                <label htmlFor="ex-date">{t("forms.expenseDate")}</label>
+                <input
+                  id="ex-date"
+                  type="date"
+                  value={form.expense_date}
+                  onChange={(event) => setForm((prev) => ({ ...prev, expense_date: event.target.value }))}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="ex-category">{t("forms.category")}</label>
+                <select
+                  id="ex-category"
+                  value={form.category}
+                  onChange={(event) => setForm((prev) => ({ ...prev, category: event.target.value }))}
+                >
+                  {[
+                    "seeds_plants",
+                    "fertilizer",
+                    "water",
+                    "energy",
+                    "labor",
+                    "equipment",
+                    "maintenance",
+                    "transport",
+                    "packaging",
+                    "other"
+                  ].map((category) => (
+                    <option key={category} value={category}>
+                      {t(`expenseCategories.${category}`)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group">
+                <label htmlFor="ex-amount">{t("forms.amountMad")}</label>
+                <input
+                  id="ex-amount"
+                  type="number"
+                  min={0.01}
+                  step={0.01}
+                  value={form.amount_mad}
+                  onChange={(event) => setForm((prev) => ({ ...prev, amount_mad: event.target.value }))}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="ex-scope">{t("forms.scope")}</label>
+                <select
+                  id="ex-scope"
+                  value={form.scope}
+                  onChange={(event) => setForm((prev) => ({ ...prev, scope: event.target.value as ExpenseScope }))}
+                >
+                  {["farm", "greenhouse", "crop_cycle"].map((scope) => (
+                    <option key={scope} value={scope}>
+                      {t(`scopes.${scope}`)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {form.scope === "greenhouse" ? (
+                <div className="form-group">
+                  <label htmlFor="ex-greenhouse">{t("forms.greenhouse")}</label>
+                  <select
+                    id="ex-greenhouse"
+                    value={form.greenhouse_id}
+                    onChange={(event) => setForm((prev) => ({ ...prev, greenhouse_id: event.target.value }))}
+                  >
+                    {greenhouses.map((item) => (
+                      <option key={String(item.id)} value={String(item.id)}>
+                        {String(item.name ?? item.id)}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              ) : null}
+              {form.scope === "crop_cycle" ? (
+                <div className="form-group">
+                  <label htmlFor="ex-cycle">{t("forms.crop")}</label>
+                  <select
+                    id="ex-cycle"
+                    value={form.crop_cycle_id}
+                    onChange={(event) => setForm((prev) => ({ ...prev, crop_cycle_id: event.target.value }))}
+                  >
+                    {cycles.map((item) => (
+                      <option key={String(item.id)} value={String(item.id)}>
+                        {String(item.id)}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              ) : null}
+              <div className="form-actions">
+                <button className="btn btn-primary" type="submit">
+                  {t("actions.create")}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      ) : null}
+
       {loading ? <LoadingState /> : null}
       {!loading && records.length === 0 ? <EmptyState /> : null}
-      {records.length > 0 ? (
-        <div className="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>{t("forms.expenseDate")}</th>
-                <th>{t("forms.category")}</th>
-                <th>{t("forms.scope")}</th>
-                <th>{t("forms.amountMad")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {records.map((item) => (
-                <tr key={String(item.id)}>
-                  <td>{String(item.expense_date ?? "-")}</td>
-                  <td>{item.category ? t(`expenseCategories.${String(item.category)}`) : "-"}</td>
-                  <td>{item.scope ? t(`scopes.${String(item.scope)}`) : "-"}</td>
-                  <td>{formatCurrency(Number(item.amount_mad ?? item.amount ?? 0))}</td>
+
+      {!loading && records.length > 0 ? (
+        <div className="card">
+          <div className="card-header">
+            <div className="card-title">{t("entities.expenses")}</div>
+          </div>
+          <div className="card-body table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>{t("forms.expenseDate")}</th>
+                  <th>{t("forms.category")}</th>
+                  <th>{t("forms.scope")}</th>
+                  <th>{t("forms.amountMad")}</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {records.map((item) => (
+                  <tr key={String(item.id)}>
+                    <td>{String(item.expense_date ?? "-")}</td>
+                    <td>{item.category ? t(`expenseCategories.${String(item.category)}`) : "-"}</td>
+                    <td>{item.scope ? t(`scopes.${String(item.scope)}`) : "-"}</td>
+                    <td className="td-num">{formatCurrency(Number(item.amount_mad ?? item.amount ?? 0))}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       ) : null}
     </section>

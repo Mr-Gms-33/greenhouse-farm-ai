@@ -69,75 +69,96 @@ export function GreenhousesPage(): JSX.Element {
 
   return (
     <section className="stack">
-      <h1>{t("entities.greenhouses")}</h1>
-      {canWrite ? (
-        <form className="form-grid" onSubmit={onSubmit}>
-          <label>
-            {t("forms.name")}
-            <input
-              value={form.name}
-              onChange={(event) => setForm((prev) => ({ ...prev, name: event.target.value }))}
-              required
-            />
-          </label>
-          <label>
-            {t("forms.areaM2")}
-            <input
-              value={form.area_m2}
-              type="number"
-              min={0.01}
-              step={0.01}
-              onChange={(event) => setForm((prev) => ({ ...prev, area_m2: event.target.value }))}
-              required
-            />
-          </label>
-          <label>
-            {t("forms.status")}
-            <select
-              value={form.status}
-              onChange={(event) =>
-                setForm((prev) => ({ ...prev, status: event.target.value as GreenhouseForm["status"] }))
-              }
-            >
-              <option value="active">{t("greenhouseStatus.active")}</option>
-              <option value="inactive">{t("greenhouseStatus.inactive")}</option>
-            </select>
-          </label>
-          <label>
-            {t("forms.notes")}
-            <textarea
-              value={form.notes}
-              onChange={(event) => setForm((prev) => ({ ...prev, notes: event.target.value }))}
-            />
-          </label>
-          <button type="submit">{t("actions.create")}</button>
-        </form>
-      ) : null}
+      <p className="page-intro">{t("entities.greenhouses")}</p>
       {error ? <ErrorState message={error} /> : null}
+
+      {canWrite ? (
+        <div className="card">
+          <div className="card-header">
+            <div className="card-title">{t("actions.create")}</div>
+          </div>
+          <div className="card-body">
+            <form className="form-grid" onSubmit={onSubmit}>
+              <div className="form-group">
+                <label htmlFor="gh-name">{t("forms.name")}</label>
+                <input
+                  id="gh-name"
+                  value={form.name}
+                  onChange={(event) => setForm((prev) => ({ ...prev, name: event.target.value }))}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="gh-area">{t("forms.areaM2")}</label>
+                <input
+                  id="gh-area"
+                  value={form.area_m2}
+                  type="number"
+                  min={0.01}
+                  step={0.01}
+                  onChange={(event) => setForm((prev) => ({ ...prev, area_m2: event.target.value }))}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="gh-status">{t("forms.status")}</label>
+                <select
+                  id="gh-status"
+                  value={form.status}
+                  onChange={(event) =>
+                    setForm((prev) => ({ ...prev, status: event.target.value as GreenhouseForm["status"] }))
+                  }
+                >
+                  <option value="active">{t("greenhouseStatus.active")}</option>
+                  <option value="inactive">{t("greenhouseStatus.inactive")}</option>
+                </select>
+              </div>
+              <div className="form-group form-full">
+                <label htmlFor="gh-notes">{t("forms.notes")}</label>
+                <textarea
+                  id="gh-notes"
+                  value={form.notes}
+                  onChange={(event) => setForm((prev) => ({ ...prev, notes: event.target.value }))}
+                />
+              </div>
+              <div className="form-actions">
+                <button className="btn btn-primary" type="submit">
+                  {t("actions.create")}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      ) : null}
+
       {loading ? <LoadingState /> : null}
       {!loading && records.length === 0 ? <EmptyState /> : null}
+
       {records.length > 0 ? (
-        <div className="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>{t("forms.name")}</th>
-                <th>{t("forms.areaM2")}</th>
-                <th>{t("forms.status")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {records.map((item) => (
-                <tr key={String(item.id ?? item.name)}>
-                  <td>{String(item.name ?? item.code ?? "-")}</td>
-                  <td>{String(item.area_m2 ?? "-")}</td>
-                  <td>
+        <div className="plots-grid">
+          {records.map((item) => (
+            <article key={String(item.id ?? item.name)} className="plot-card">
+              <div className="plot-card-banner">⌂</div>
+              <div className="plot-card-body">
+                <div className="plot-card-name">{String(item.name ?? item.code ?? "-")}</div>
+                <div className="plot-card-meta">
+                  <span className={`badge ${item.status === "active" ? "badge-green" : "badge-gray"}`}>
                     {item.status ? t(`greenhouseStatus.${String(item.status)}`) : t("status.none")}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                  </span>
+                </div>
+                <div className="plot-card-stats">
+                  <div className="plot-stat">
+                    <div className="l">{t("forms.areaM2")}</div>
+                    <div className="v">{String(item.area_m2 ?? "-")}</div>
+                  </div>
+                  <div className="plot-stat">
+                    <div className="l">{t("forms.status")}</div>
+                    <div className="v">{item.status ? t(`greenhouseStatus.${String(item.status)}`) : "-"}</div>
+                  </div>
+                </div>
+              </div>
+            </article>
+          ))}
         </div>
       ) : null}
     </section>
