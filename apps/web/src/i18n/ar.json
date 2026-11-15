@@ -1,0 +1,171 @@
+{
+  "appTitle": "إدارة مزرعة البيوت المحمية",
+  "actions": {
+    "save": "حفظ",
+    "create": "إنشاء",
+    "update": "تحديث",
+    "cancel": "إلغاء",
+    "logout": "تسجيل الخروج",
+    "refresh": "تحديث",
+    "generate": "توليد التحليل"
+  },
+  "nav": {
+    "dashboard": "لوحة التحكم",
+    "greenhouses": "البيوت المحمية",
+    "cropCycles": "الدورات الزراعية",
+    "harvests": "الحصاد",
+    "customers": "العملاء",
+    "sales": "المبيعات",
+    "expenses": "المصاريف",
+    "reports": "التقارير المالية",
+    "analyses": "التحليل المالي",
+    "login": "تسجيل الدخول"
+  },
+  "auth": {
+    "title": "تسجيل الدخول",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "submit": "دخول",
+    "error": "بيانات الدخول غير صحيحة أو الحساب غير نشط."
+  },
+  "status": {
+    "loading": "جارٍ التحميل...",
+    "empty": "لا توجد سجلات بعد.",
+    "none": "غير متاح",
+    "insufficientData": "بيانات غير كافية"
+  },
+  "dashboard": {
+    "title": "لوحة التحكم",
+    "ownerHint": "نظرة المالك تشمل التشغيل والماليات.",
+    "managerHint": "عرض تشغيلي فقط. القيم المالية مخفية.",
+    "accountantHint": "عرض مالي مع جاهزية التحليل.",
+    "activeGreenhouses": "البيوت المحمية النشطة",
+    "activeCropCycles": "الدورات النشطة",
+    "revenue": "الإيرادات",
+    "expenses": "المصاريف",
+    "profit": "الربح",
+    "margin": "الهامش",
+    "recentHarvests": "آخر الحصاد",
+    "recentSales": "آخر المبيعات",
+    "recentExpenses": "آخر المصاريف",
+    "latestAnalysis": "آخر تحليل"
+  },
+  "forms": {
+    "name": "الاسم",
+    "code": "الرمز",
+    "notes": "ملاحظات",
+    "status": "الحالة",
+    "areaM2": "المساحة (م²)",
+    "greenhouse": "البيت المحمي",
+    "crop": "المحصول",
+    "plantingDate": "تاريخ الزراعة",
+    "expectedEndDate": "تاريخ الانتهاء المتوقع",
+    "cycleStatus": "حالة الدورة",
+    "harvestDate": "تاريخ الحصاد",
+    "quantityKg": "الكمية (كغ)",
+    "qualityGrade": "درجة الجودة",
+    "contactRef": "مرجع التواصل",
+    "customer": "العميل",
+    "saleDate": "تاريخ البيع",
+    "unitPriceMad": "سعر الوحدة (درهم/كغ)",
+    "totalMad": "الإجمالي (درهم)",
+    "channel": "قناة البيع",
+    "externalRef": "مرجع خارجي",
+    "expenseDate": "تاريخ المصروف",
+    "category": "الفئة",
+    "amountMad": "المبلغ (درهم)",
+    "scope": "النطاق",
+    "endMonth": "شهر نهاية التحليل",
+    "month": "الشهر",
+    "required": "هذا الحقل مطلوب.",
+    "positive": "يجب أن تكون القيمة أكبر من صفر."
+  },
+  "entities": {
+    "greenhouses": "البيوت المحمية",
+    "cropCycles": "الدورات الزراعية",
+    "harvests": "الحصاد",
+    "customers": "العملاء",
+    "sales": "المبيعات",
+    "expenses": "المصاريف",
+    "reports": "التقارير المالية",
+    "analysis": "التحليل المالي"
+  },
+  "scopes": {
+    "farm": "المزرعة كاملة",
+    "greenhouse": "بيت محمي",
+    "crop_cycle": "دورة زراعية"
+  },
+  "greenhouseStatus": {
+    "active": "نشط",
+    "inactive": "غير نشط"
+  },
+  "cycleStatus": {
+    "planned": "مخطط",
+    "active": "نشط",
+    "completed": "مكتمل",
+    "cancelled": "ملغى"
+  },
+  "crops": {
+    "tomato": "طماطم",
+    "pepper": "فلفل",
+    "zucchini": "كوسة",
+    "cucumber": "خيار"
+  },
+  "channels": {
+    "wholesaler": "تاجر جملة",
+    "market": "السوق",
+    "distributor": "موزع",
+    "other": "أخرى"
+  },
+  "expenseCategories": {
+    "seeds_plants": "بذور/شتلات",
+    "fertilizer": "سماد",
+    "water": "ماء",
+    "energy": "طاقة",
+    "labor": "عمالة",
+    "equipment": "معدات",
+    "maintenance": "صيانة",
+    "transport": "نقل",
+    "packaging": "تغليف",
+    "other": "أخرى"
+  },
+  "reports": {
+    "title": "التقارير المالية",
+    "from": "من تاريخ",
+    "to": "إلى تاريخ",
+    "summary": "الملخص",
+    "byMonth": "حسب الشهر",
+    "byGreenhouse": "حسب البيت المحمي",
+    "byCrop": "حسب المحصول",
+    "marginNA": "غير منطبق"
+  },
+  "analysis": {
+    "title": "التحليل المالي",
+    "facts": "حقائق مسجلة",
+    "estimates": "تقديرات التوقع",
+    "estimateLabel": "تقدير وليس حقيقة مسجلة",
+    "coverage": "نطاق البيانات",
+    "modelVersion": "إصدار النموذج",
+    "generatedAt": "تاريخ الإنشاء",
+    "horizon": "أفق التوقع (أشهر)",
+    "narrative": "الشرح",
+    "validation": "خطأ التحقق MAE",
+    "state": "الحالة",
+    "view": "التحاليل المحفوظة",
+    "insufficientDataBody": "يلزم ستة أشهر مكتملة على الأقل للحصول على توقع رقمي."
+  },
+  "errors": {
+    "generic": "حدث خطأ ما.",
+    "unauthorized": "ليست لديك صلاحية للوصول إلى هذه الصفحة."
+  },
+  "locale": {
+    "switch": "اللغة",
+    "en": "الإنجليزية",
+    "ar": "العربية"
+  },
+  "roles": {
+    "owner": "المالك",
+    "manager": "المدير",
+    "accountant": "المحاسب"
+  }
+}

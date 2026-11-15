@@ -1,0 +1,40 @@
+name: Promote to production
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: "Git SHA / image tag previously tested on main"
+        required: true
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.image_tag }}
+      - name: Verify tag exists on main history
+        run: git merge-base --is-ancestor ${{ inputs.image_tag }} origin/main || git merge-base --is-ancestor ${{ inputs.image_tag }} HEAD
+      - name: Promote immutable image
+        env:
+          DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK_PROD }}
+          IMAGE_TAG: ${{ inputs.image_tag }}
+        run: |
+          echo "Promoting ${IMAGE_TAG} to production" >> $GITHUB_STEP_SUMMARY
+          if [ -n "$DEPLOY_HOOK" ]; then
+            curl -fsS -X POST "$DEPLOY_HOOK"
+          else
+            echo "Configure RENDER_DEPLOY_HOOK_PROD to enable live production promotion."
+            exit 1
+          fi
+
+  rollback:
+    if: failure()
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Document rollback path
+        run: |
+          echo "Use workflow_dispatch with the previous known-good SHA, or run docs/runbooks/rollback.md." >> $GITHUB_STEP_SUMMARY

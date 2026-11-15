@@ -1,0 +1,171 @@
+{
+  "appTitle": "Greenhouse Farm Management",
+  "actions": {
+    "save": "Save",
+    "create": "Create",
+    "update": "Update",
+    "cancel": "Cancel",
+    "logout": "Logout",
+    "refresh": "Refresh",
+    "generate": "Generate analysis"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "greenhouses": "Greenhouses",
+    "cropCycles": "Crop cycles",
+    "harvests": "Harvests",
+    "customers": "Customers",
+    "sales": "Sales",
+    "expenses": "Expenses",
+    "reports": "Reports",
+    "analyses": "Financial analysis",
+    "login": "Login"
+  },
+  "auth": {
+    "title": "Sign in",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Sign in",
+    "error": "Invalid credentials or account inactive."
+  },
+  "status": {
+    "loading": "Loading...",
+    "empty": "No records yet.",
+    "none": "Not available",
+    "insufficientData": "Insufficient data"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "ownerHint": "Owner overview includes operations and finance.",
+    "managerHint": "Operations view only. Financial totals are hidden.",
+    "accountantHint": "Finance view with analysis readiness.",
+    "activeGreenhouses": "Active greenhouses",
+    "activeCropCycles": "Active crop cycles",
+    "revenue": "Revenue",
+    "expenses": "Expenses",
+    "profit": "Profit",
+    "margin": "Margin",
+    "recentHarvests": "Recent harvests",
+    "recentSales": "Recent sales",
+    "recentExpenses": "Recent expenses",
+    "latestAnalysis": "Latest analysis"
+  },
+  "forms": {
+    "name": "Name",
+    "code": "Code",
+    "notes": "Notes",
+    "status": "Status",
+    "areaM2": "Area (m²)",
+    "greenhouse": "Greenhouse",
+    "crop": "Crop",
+    "plantingDate": "Planting date",
+    "expectedEndDate": "Expected end date",
+    "cycleStatus": "Cycle status",
+    "harvestDate": "Harvest date",
+    "quantityKg": "Quantity (kg)",
+    "qualityGrade": "Quality grade",
+    "contactRef": "Contact reference",
+    "customer": "Customer",
+    "saleDate": "Sale date",
+    "unitPriceMad": "Unit price (MAD/kg)",
+    "totalMad": "Total (MAD)",
+    "channel": "Sales channel",
+    "externalRef": "External reference",
+    "expenseDate": "Expense date",
+    "category": "Category",
+    "amountMad": "Amount (MAD)",
+    "scope": "Scope",
+    "endMonth": "Analysis end month",
+    "month": "Month",
+    "required": "This field is required.",
+    "positive": "Value must be greater than zero."
+  },
+  "entities": {
+    "greenhouses": "Greenhouses",
+    "cropCycles": "Crop cycles",
+    "harvests": "Harvests",
+    "customers": "Customers",
+    "sales": "Sales",
+    "expenses": "Expenses",
+    "reports": "Financial reports",
+    "analysis": "Financial analysis"
+  },
+  "scopes": {
+    "farm": "Whole farm",
+    "greenhouse": "Greenhouse",
+    "crop_cycle": "Crop cycle"
+  },
+  "greenhouseStatus": {
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "cycleStatus": {
+    "planned": "Planned",
+    "active": "Active",
+    "completed": "Completed",
+    "cancelled": "Cancelled"
+  },
+  "crops": {
+    "tomato": "Tomato",
+    "pepper": "Pepper",
+    "zucchini": "Zucchini",
+    "cucumber": "Cucumber"
+  },
+  "channels": {
+    "wholesaler": "Wholesaler",
+    "market": "Market",
+    "distributor": "Distributor",
+    "other": "Other"
+  },
+  "expenseCategories": {
+    "seeds_plants": "Seeds/plants",
+    "fertilizer": "Fertilizer",
+    "water": "Water",
+    "energy": "Energy",
+    "labor": "Labor",
+    "equipment": "Equipment",
+    "maintenance": "Maintenance",
+    "transport": "Transport",
+    "packaging": "Packaging",
+    "other": "Other"
+  },
+  "reports": {
+    "title": "Financial reports",
+    "from": "From date",
+    "to": "To date",
+    "summary": "Summary",
+    "byMonth": "By month",
+    "byGreenhouse": "By greenhouse",
+    "byCrop": "By crop",
+    "marginNA": "Not applicable"
+  },
+  "analysis": {
+    "title": "Financial analysis",
+    "facts": "Recorded facts",
+    "estimates": "Forecast estimates",
+    "estimateLabel": "Estimate, not recorded fact",
+    "coverage": "Coverage",
+    "modelVersion": "Model version",
+    "generatedAt": "Generated at",
+    "horizon": "Forecast horizon (months)",
+    "narrative": "Narrative",
+    "validation": "Validation MAE",
+    "state": "State",
+    "view": "Saved analyses",
+    "insufficientDataBody": "At least six complete months are required for a numeric forecast."
+  },
+  "errors": {
+    "generic": "Something went wrong.",
+    "unauthorized": "You are not authorized to view this page."
+  },
+  "locale": {
+    "switch": "Language",
+    "en": "English",
+    "ar": "Arabic"
+  },
+  "roles": {
+    "owner": "Owner",
+    "manager": "Manager",
+    "accountant": "Accountant"
+  }
+}

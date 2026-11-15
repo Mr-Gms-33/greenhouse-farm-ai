@@ -1,0 +1,50 @@
+{
+  "title": "Financial Analysis Journey",
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "Journey success vs failure",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "targets": [
+        {
+          "expr": "sum(rate(financial_analysis_journey_total[5m])) by (result)",
+          "legendFormat": "{{result}}"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Journey latency",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(financial_analysis_journey_duration_seconds_bucket[5m])) by (le))",
+          "legendFormat": "p95"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Insufficient data rate",
+      "gridPos": { "h": 4, "w": 8, "x": 0, "y": 8 },
+      "targets": [
+        {
+          "expr": "sum(rate(financial_analysis_journey_total{result=\"insufficient_data\"}[5m]))"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Summary-only fallback",
+      "gridPos": { "h": 4, "w": 8, "x": 8, "y": 8 },
+      "targets": [
+        {
+          "expr": "sum(rate(financial_analysis_journey_total{result=\"summary_only\"}[5m]))"
+        }
+      ]
+    }
+  ]
+}

@@ -13,6 +13,7 @@ __pycache__/
 .ruff_cache/
 .venv/
 venv/
+services/api/.venv/
 htmlcov/
 .coverage
 
@@ -43,3 +44,9 @@ artifacts/
 
 # Local legacy prototype; not part of the approved MVP baseline
 alfilaha_pro.html
+
+apps/web/*.tsbuildinfo
+apps/web/vite.config.js
+apps/web/vite.config.d.ts
+apps/web/dist/
+
