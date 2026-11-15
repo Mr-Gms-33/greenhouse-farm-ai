@@ -1,0 +1,27 @@
+groups:
+  - name: financial_analysis_user_impact
+    rules:
+      - alert: FinancialAnalysisJourneyFailing
+        expr: |
+          (
+            sum(rate(financial_analysis_journey_total{result="failure"}[5m]))
+            /
+            clamp_min(sum(rate(financial_analysis_journey_total[5m])), 0.001)
+          ) > 0.2
+        for: 2m
+        labels:
+          severity: page
+          user_impact: "true"
+        annotations:
+          summary: Financial analysis journey failure rate is elevated
+          description: More than 20% of analysis journeys are failing. Investigate forecast path and enable summary-only if needed.
+
+      - alert: FinancialAnalysisHighLatency
+        expr: histogram_quantile(0.95, sum(rate(financial_analysis_journey_duration_seconds_bucket[5m])) by (le)) > 2
+        for: 5m
+        labels:
+          severity: ticket
+          user_impact: "true"
+        annotations:
+          summary: Financial analysis p95 latency exceeds 2s
+          description: Users are waiting too long for analysis results.
