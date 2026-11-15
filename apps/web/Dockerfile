@@ -1,21 +1,16 @@
 FROM node:20-alpine AS build
 WORKDIR /app
-
-COPY package.json ./
-RUN npm install
-
+COPY package.json package-lock.json ./
+RUN npm ci
 COPY . .
+ARG VITE_API_URL=http://localhost:8000/api/v1
+ENV VITE_API_URL=$VITE_API_URL
 RUN npm run build
 
 FROM nginx:1.27-alpine
-WORKDIR /usr/share/nginx/html
-
-COPY --from=build /app/dist ./
-COPY nginx/default.conf.template /etc/nginx/templates/default.conf.template
+COPY --from=build /app/dist /usr/share/nginx/html
+COPY nginx/default.conf /etc/nginx/conf.d/default.conf
 COPY nginx/entrypoint.sh /entrypoint.sh
-
-RUN chmod +x /entrypoint.sh
-
-ENV API_PROXY_URL=""
-
+RUN chmod +x /entrypoint.sh && sed -i 's/\r$//' /entrypoint.sh
+EXPOSE 80
 ENTRYPOINT ["/entrypoint.sh"]

@@ -7,16 +7,18 @@
 | Agent team | [AGENTS.md](../AGENTS.md), [team/](../team/), [process.md](process.md) |
 | Context management | [AGENTS.md](../AGENTS.md) links modular docs |
 | Full-stack app | `apps/web`, `services/api`, PostgreSQL via `compose.yaml` |
-| Tests | `services/api/tests` (16 passed), `apps/web` Vitest (4 passed), `docker compose run --rm test` |
-| Containerization | `compose.yaml`, Dockerfiles |
-| Deployment | [deployment.md](deployment.md), CI deploy jobs |
-| CI/CD | `.github/workflows/ci.yml`, `promote-production.yml` |
-| Observability | `infra/observability`, `/metrics`, Grafana dashboard |
+| Tests | API pytest 16 passed; web Vitest 4 passed; CI green on main |
+| Containerization | `docker compose up --build` verified locally (web/api/db/responder healthy) |
+| Deployment | [deployment.md](deployment.md); configure `RENDER_DEPLOY_HOOK_*` for public URL |
+| CI/CD | `.github/workflows/ci.yml` (green), `promote-production.yml` |
+| Observability | `infra/observability`, `/metrics`, Grafana dashboard JSON |
 | Alerting | `alerts.yml`, Alertmanager → responder |
-| On-call agent | `services/responder`, [analysis-alert.md](runbooks/analysis-alert.md) |
+| On-call agent | Demo drill returned `recovered: true` via `/demo/trigger` |
 
-## Local verification recorded
+## Local verification recorded (2026-11-15)
 
-- API: `pytest` → 16 passed
-- Web: `vitest` → 4 passed; `npm run build` succeeded
-- Docker daemon was unavailable during the first packaging pass; Compose files and Dockerfiles are present for single-command startup once Docker Desktop is running
+- `GET /health` and `/ready` → ok
+- Owner login + dashboard + financial analysis (9 months, validated forecast) succeeded
+- Responder demo trigger recovered summary-only path
+- Web UI `http://localhost:3000` → HTTP 200
+- GitHub Actions CI on merged PR #17 → success
