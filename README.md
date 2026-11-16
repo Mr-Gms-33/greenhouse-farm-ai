@@ -34,7 +34,26 @@ docker compose up --build
 - Prometheus: http://localhost:9090
 - Responder health: http://localhost:8089/health
 
+## Public deployment (Render)
+
+| Service | URL |
+|---|---|
+| Web / login | https://agri-web-uff8.onrender.com/login |
+| API | https://agri-api-j045.onrender.com |
+| Health | https://agri-api-j045.onrender.com/health |
+| Docs | https://agri-api-j045.onrender.com/docs |
+
+Evidence map: [docs/evidence.md](docs/evidence.md) · Deploy notes: [docs/deployment.md](docs/deployment.md)
+
 ### Demo users
+
+**Web UI login (farm manager only):**
+
+| Email | Password | Role |
+|---|---|---|
+| manager@farm.ma | Manager123! | Farm Manager |
+
+API also seeds owner/accountant for backend RBAC tests:
 
 | Email | Password | Role |
 |---|---|---|
@@ -56,17 +75,17 @@ python -m venv .venv
 .\.venv\Scripts\pip install -r requirements.txt
 .\.venv\Scripts\python -m pytest -q
 
-cd ..\..\apps\web
-npm install
-npm test -- --run
-npm run build
+python ..\..\scripts\verify_alfilaha_1to1.py
 ```
+
+(`apps/web` remains available for the legacy React client; the served UI is `apps/alfilaha`.)
 
 ## Architecture
 
 See [docs/architecture.md](docs/architecture.md) and [docs/api.md](docs/api.md).
 
-- `apps/web` — React + TypeScript + i18next (EN/AR, LTR/RTL)
+- `apps/alfilaha` — exact AlFilaha Pro static SPA (Arabic RTL UI, 1:1 with prototype)
+- `apps/web` — legacy React client retained for reference/tests only
 - `services/api` — FastAPI + PostgreSQL + Decimal finance + forecast engine
 - `services/responder` — allowlisted alert remediation agent
 - `infra/observability` — OTel, Prometheus, Alertmanager, Loki, Tempo, Grafana
