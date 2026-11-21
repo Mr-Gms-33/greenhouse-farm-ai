@@ -6,7 +6,7 @@
 | Product specification + public tracker | [product-spec.md](product-spec.md), [milestone](https://github.com/Mr-Gms-33/greenhouse-farm-ai/milestone/1) |
 | Agent team | [AGENTS.md](../AGENTS.md), [team/](../team/), [process.md](process.md) |
 | Context management | [AGENTS.md](../AGENTS.md) links modular docs |
-| Full-stack app | `apps/web`, `services/api`, PostgreSQL via Compose and Render |
+| Full-stack app | `apps/alfilaha` (AlFilaha Pro UI) + `services/api` + PostgreSQL (Compose/Render) |
 | Tests | API pytest 16 passed; web Vitest; CI green on `main` |
 | Containerization | `docker compose up --build` verified (web/api/db/responder healthy) |
 | Deployment | **Public Render deployment** (see URLs below) |

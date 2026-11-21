@@ -4,7 +4,7 @@
 
 | Layer | Choice |
 |---|---|
-| Web | React 18, TypeScript, Vite, React Router, i18next |
+| Web | AlFilaha Pro static SPA (`apps/alfilaha`, EN/AR) |
 | API | FastAPI, Pydantic v2, SQLAlchemy 2, Alembic |
 | Database | PostgreSQL 16 |
 | Auth | JWT bearer tokens, bcrypt password hashes |
@@ -19,11 +19,10 @@
 
 ```mermaid
 flowchart LR
-    Web["apps/web"] --> API["services/api"]
+    Web["apps/alfilaha"] --> API["services/api"]
     API --> DB[(PostgreSQL)]
     API --> Forecast["forecast engine"]
-    Web --> OTel["OpenTelemetry"]
-    API --> OTel
+    API --> OTel["OpenTelemetry"]
     OTel --> Observe["Prometheus Grafana Loki Tempo"]
     Observe --> Alert["Alertmanager"]
     Alert --> Responder["services/responder"]

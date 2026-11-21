@@ -31,24 +31,17 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: npm
-          cache-dependency-path: apps/web/package-lock.json
       - name: Install API deps
         run: pip install -r services/api/requirements.txt
       - name: API tests
         working-directory: services/api
         run: pytest -q
-      - name: Install web deps
-        working-directory: apps/web
-        run: npm ci || npm install
-      - name: Web lint/typecheck/tests
-        working-directory: apps/web
+      - name: AlFilaha frontend smoke
         run: |
-          npm run build
-          npm test -- --run
+          test -f apps/alfilaha/index.html
+          test -f apps/alfilaha/Dockerfile
+          test -f apps/alfilaha/nginx.conf
+          python -c "from pathlib import Path; t=Path('apps/alfilaha/index.html').read_text(encoding='utf-8'); assert 'الفلاحة برو' in t; assert 'manager@farm.ma' in t; assert 'page-builder' not in t; assert len(t)>300000"
       - name: Build containers
         run: docker compose build api web responder
 

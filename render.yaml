@@ -30,9 +30,6 @@ services:
   - type: web
     name: agri-web
     runtime: docker
-    dockerfilePath: ./apps/web/Dockerfile
-    dockerContext: ./apps/web
+    dockerfilePath: ./apps/alfilaha/Dockerfile
+    dockerContext: ./apps/alfilaha
     plan: free
-    envVars:
-      - key: VITE_API_URL
-        sync: false

@@ -41,9 +41,7 @@ services:
 
   web:
     build:
-      context: ./apps/web
-      args:
-        VITE_API_URL: ${VITE_API_URL:-http://localhost:8000/api/v1}
+      context: ./apps/alfilaha
     depends_on:
       api:
         condition: service_healthy

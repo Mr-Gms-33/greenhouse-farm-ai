@@ -30,7 +30,7 @@ Demo login (seeded):
 
 ## Render services
 
-- `agri-web` — Docker build from `apps/web` (Vite `VITE_API_URL` at build time)
+- `agri-web` — Docker build from `apps/alfilaha` (AlFilaha Pro static SPA)
 - `agri-api` — Docker build from `services/api`
 - `agri-db` — Render managed PostgreSQL
 
@@ -41,9 +41,7 @@ Required API env on Render:
 - `CORS_ORIGINS=https://agri-web-uff8.onrender.com`
 - `SEED_DEMO=true`
 
-Required web env on Render (build-time):
-
-- `VITE_API_URL=https://agri-api-j045.onrender.com/api/v1`
+Web login (AlFilaha SPA): `manager@farm.ma` / `Manager123!`
 
 Blueprint reference: [render.yaml](../render.yaml).
 
