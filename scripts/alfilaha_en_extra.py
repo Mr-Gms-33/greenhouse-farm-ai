@@ -268,4 +268,13 @@ EXTRA_EN = {
     "المرحلة السابقة": "Previous stage",
     "محصودة": "harvested",
     "قطعة مزروعة": "planted plots",
+    "انقر عموداً لفتح القطعة": "Click a column to open the plot",
+    "ERP فلاحي": "Farm ERP",
+    "المرحلة الحالية": "Current stage",
+    "مهام مرحلة": "Stage tasks",
+    "غرس": "Planted",
+    "بيت بلاستيكي 1": "Greenhouse 1",
+    "بيت بلاستيكي 2": "Greenhouse 2",
+    "بيت بلاستيكي 3": "Greenhouse 3",
+    "أرض مفتوحة — الفراولة": "Open field — strawberry",
 }
