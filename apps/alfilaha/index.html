@@ -871,6 +871,7 @@ function setLang(lang){
     var login = document.getElementById('login-page');
     if(app && app.style.display !== 'none' && login && login.style.display === 'none'){
       applyChromeI18n();
+      if(typeof rebuildSeasonSelect === 'function') rebuildSeasonSelect();
       if(typeof renderPage === 'function' && typeof currentPage === 'string') renderPage(currentPage);
       if(typeof updateNavCounts === 'function') updateNavCounts();
       localizeTree(document.getElementById('sidebar'));
@@ -3535,7 +3536,7 @@ function printSeasonComparison(){
 function rebuildSeasonSelect(){
   var sel = document.getElementById('season-select');
   sel.innerHTML = DB.seasons.map(function(s){
-    return '<option value="'+s.id+'"'+(s.id===DB.activeSeason?' selected':'')+'>'+esc(s.name)+'</option>';
+    return '<option value="'+s.id+'"'+(s.id===DB.activeSeason?' selected':'')+'>'+esc(t(s.name))+'</option>';
   }).join('');
 }
 
