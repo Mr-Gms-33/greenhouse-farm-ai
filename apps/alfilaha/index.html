@@ -1020,17 +1020,17 @@ function toast(msg,type){
     info:'<circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>'
   };
   var c = document.getElementById('toast-container');
-  var t = document.createElement('div');
-  t.className = 'toast '+type;
-  t.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+icons[type]+'</svg>'+
+  var el = document.createElement('div');
+  el.className = 'toast '+type;
+  el.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+icons[type]+'</svg>'+
     '<span class="toast-msg">'+esc(msg)+'</span>'+
     '<button class="toast-close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>';
-  c.appendChild(t);
+  c.appendChild(el);
   var close = function(){
-    t.classList.add('hiding');
-    setTimeout(function(){ t.remove(); },300);
+    el.classList.add('hiding');
+    setTimeout(function(){ el.remove(); },300);
   };
-  t.querySelector('.toast-close').addEventListener('click',close);
+  el.querySelector('.toast-close').addEventListener('click',close);
   setTimeout(close,4200);
 }
 
@@ -1627,7 +1627,7 @@ function renderDashboard(){
   plots.forEach(function(p){ phaseCounts[plotPhase(p)] = (phaseCounts[plotPhase(p)]||0)+1; });
 
   el.innerHTML =
-    '<div class="page-intro">نظرة شاملة على موسم <strong>'+esc(season.name)+'</strong> — المؤشرات المالية والإنتاجية لكل ضيعتك.</div>'+
+    '<div class="page-intro">نظرة شاملة على موسم <strong>'+esc(t(season.name))+'</strong> — المؤشرات المالية والإنتاجية لكل ضيعتك.</div>'+
     alertsHTML +
     // بطاقات الإحصائيات
     '<div class="stats-grid">'+
@@ -2620,7 +2620,7 @@ function renderReports(){
     var isActive = s.id===DB.activeSeason;
     seasonRows +=
       '<tr'+(isActive?' style="background:var(--c-green-l)"':'')+'>'+
-        '<td><strong>'+esc(s.name)+'</strong>'+(isActive?' <span class="badge badge-green-solid">نشط</span>':'')+'</td>'+
+        '<td><strong>'+esc(t(s.name))+'</strong>'+(isActive?' <span class="badge badge-green-solid">نشط</span>':'')+'</td>'+
         '<td class="td-num">'+a.count+'</td>'+
         '<td class="td-num">'+fmtArea(a.area)+'</td>'+
         '<td class="td-num">'+fmtMAD(a.cost)+'</td>'+
@@ -2773,7 +2773,7 @@ function renderSeasonsList(){
     var isActive = s.id===DB.activeSeason;
     html +=
       '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #F4F6F3">'+
-        '<div><span style="font-weight:700;font-size:13px">'+esc(s.name)+'</span>'+
+        '<div><span style="font-weight:700;font-size:13px">'+esc(t(s.name))+'</span>'+
           (isActive?' <span class="badge badge-green-solid">نشط</span>':'')+
           '<div style="font-size:11px;color:var(--c-muted)">'+sp.length+' قطعة</div></div>'+
         '<div class="btn-group">'+
@@ -3435,7 +3435,7 @@ function printPlotReport(plotId){
       printPI('المساحة',fmtArea(p.area))+
       printPI('تاريخ الغرس',fmtDate(p.plantDate))+
       printPI('الحصاد المتوقّع',fmtDate(p.expectedHarvest))+
-      printPI('الموسم',season.name)+
+      printPI('الموسم',t(season.name))+
       printPI('الربح / م²',fmtMAD(plotProfitPerM2(p)))+
     '</div></div>';
 
@@ -3501,7 +3501,7 @@ function printAllPlots(){
       '<td>'+fmtMAD(profit)+'</td></tr>';
   });
   if(!rows) rows = '<tr><td colspan="8" style="text-align:center;color:#999">لا توجد قطع</td></tr>';
-  var table = '<div class="print-section"><h3>جميع القطع — موسم '+esc(activeSeason().name)+'</h3>'+
+  var table = '<div class="print-section"><h3>جميع القطع — موسم '+esc(t(activeSeason().name))+'</h3>'+
     '<table class="print-table"><thead><tr><th>القطعة</th><th>النوع</th><th>المحصول</th>'+
       '<th>المساحة</th><th>التكلفة</th><th>المحصول</th><th>الإيراد</th><th>الربح</th></tr></thead>'+
     '<tbody>'+rows+'</tbody>'+
@@ -3509,7 +3509,7 @@ function printAllPlots(){
       '<td>'+fmtMAD(a.cost)+'</td><td>'+fmtKg(a.yieldKg)+'</td>'+
       '<td>'+fmtMAD(a.revenue)+'</td><td>'+fmtMAD(a.profit)+'</td></tr></tfoot>'+
     '</table></div>';
-  doPrint(printHeader('تقرير جميع القطع','موسم: '+activeSeason().name)+table+printFooter());
+  doPrint(printHeader('تقرير جميع القطع','موسم: '+t(activeSeason().name))+table+printFooter());
 }
 
 /** طباعة مقارنة المواسم */
