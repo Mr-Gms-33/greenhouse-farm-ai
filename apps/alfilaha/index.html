@@ -117,6 +117,21 @@ img{max-width:100%;display:block}
 .sidebar-season label{font-size:9.5px;color:rgba(255,255,255,.4);font-weight:700;display:block;margin-bottom:5px;letter-spacing:.5px}
 .sidebar-season select{width:100%;padding:7px 9px;background:var(--c-dark3);border:1px solid rgba(255,255,255,.12);border-radius:var(--r-sm);color:#fff;font-size:12px;outline:none;cursor:pointer}
 
+
+/* ─── الموردون / فواتير ───────────────────────────────────── */
+.bill-critical{background:var(--c-red-l)!important;border-color:#F3A8A4!important}
+.bill-warning{background:var(--c-amber-l)!important;border-color:#F1D08C!important}
+.bill-status{display:inline-flex;align-items:center;gap:5px;font-weight:800;font-size:11px;padding:2px 8px;border-radius:10px}
+.bill-status.critical{background:var(--c-red);color:#fff}
+.bill-status.warning{background:var(--c-amber);color:#fff}
+.bill-status.ok{background:var(--c-ok-l);color:var(--c-ok-d)}
+.bill-status.paid{background:var(--c-green-l);color:var(--c-green-d)}
+.supplier-card{cursor:pointer}
+.bill-thumb{width:48px;height:48px;object-fit:cover;border-radius:8px;border:1px solid var(--c-border)}
+.nav-item .badge-count.badge-critical{background:var(--c-red)!important}
+.scope-box{border:1px solid var(--c-border);border-radius:var(--r-md);padding:10px;max-height:160px;overflow:auto;background:var(--c-bg)}
+.scope-box label{display:flex;align-items:center;gap:8px;font-size:12.5px;padding:4px 0;cursor:pointer}
+
 /* ─── المحتوى الرئيسي ──────────────────────────────────────── */
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
 .topbar{background:var(--c-white);border-bottom:1px solid var(--c-border);padding:11px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:12px;z-index:10}
@@ -579,6 +594,11 @@ body.lang-en .sidebar{text-align:left}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
       لوحة القيادة
     </div>
+    <div class="nav-item" data-page="suppliers">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5"/><path d="M8 3H3v5"/><path d="M12 22v-8.3a4 4 0 0 0-1.172-2.872L3 3"/><path d="m15 9 6-6"/><path d="M9 21h6"/><path d="M12 14v7"/></svg>
+      الموردون
+      <span class="badge-count" id="nav-count-suppliers">0</span>
+    </div>
     <span class="nav-section">القطع الأرضية</span>
     <div class="nav-item" data-page="serres">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 9v12h20V9Z"/><path d="M12 3v18"/><path d="M2 9h20"/><path d="M7 21V6.8"/><path d="M17 21V6.8"/></svg>
@@ -648,6 +668,8 @@ body.lang-en .sidebar{text-align:left}
     <div class="content">
       <!-- لوحة القيادة -->
       <div class="page" id="page-dashboard"></div>
+      <div class="page" id="page-suppliers"></div>
+      <div class="page" id="page-supplier-detail"></div>
       <!-- البيوت البلاستيكية -->
       <div class="page" id="page-serres"></div>
       <!-- الأراضي المفتوحة -->
@@ -667,6 +689,35 @@ body.lang-en .sidebar{text-align:left}
     </div>
   </div>
 </div>
+</div>
+
+
+<div class="modal-backdrop" id="modal-supplier">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-supplier-title">مورد جديد</div>
+      <button class="modal-close" data-close-modal="modal-supplier"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+    </div>
+    <div class="modal-body" id="modal-supplier-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" id="btn-save-supplier">حفظ المورد</button>
+      <button class="btn" data-close-modal="modal-supplier">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="modal-bill">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-bill-title">فاتورة مورد</div>
+      <button class="modal-close" data-close-modal="modal-bill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+    </div>
+    <div class="modal-body" id="modal-bill-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" id="btn-save-bill">حفظ الفاتورة</button>
+      <button class="btn" data-close-modal="modal-bill">إلغاء</button>
+    </div>
+  </div>
 </div>
 
 <!-- ═══ النوافذ المنبثقة ══════════════════════════════════════ -->
@@ -818,7 +869,7 @@ body.lang-en .sidebar{text-align:left}
 /* ─── Bilingual EN/AR ─────────────────────────────────────── */
 var LANG_KEY = 'alfilaha_lang';
 var LANG = localStorage.getItem(LANG_KEY) || 'ar';
-var I18N_EN = {"الفلاحة برو":"AlFilaha Pro","الفلاحة برو — نظام تدبير الضيعات الفلاحية":"AlFilaha Pro — Farm Management System","نظام تدبير الضيعات الفلاحية — المغرب":"Farm management system — Morocco","مرحباً بك 🌱":"Welcome back 🌱","ولوج إلى نظام تسيير المزرعة والإنتاج":"Sign in to the farm and production system","البريد الإلكتروني":"Email","الرمز السري (PIN)":"PIN code","تذكّرني على هذا الجهاز":"Remember me on this device","تسجيل الدخول":"Sign in","حسابات تجريبية:":"Demo accounts:","ولوج فوري بنقرة واحدة":"Instant one-click sign-in","مدير الضيعة":"Farm manager","عامل (قراءة فقط)":"Worker (read-only)","© 2026 الفلاحة برو · أكادير، المغرب — الإصدار 1.0":"© 2026 AlFilaha Pro · Agadir, Morocco — v1.0","لوحة القيادة":"Dashboard","القطع الأرضية":"Plots","البيوت البلاستيكية":"Greenhouses","الأراضي المفتوحة":"Open fields","جميع القطع":"All plots","التسيير":"Operations","الأدوية والأسمدة":"Inputs & fertilizers","التقارير":"Reports","النظام":"System","الإعدادات والنسخ":"Settings & backup","الإعدادات والنسخ الاحتياطي":"Settings & backup","المساعدة":"Help","دليل الاستعمال":"User guide","الموسم الفلاحي":"Crop season","طباعة":"Print","خروج":"Sign out","قطعة جديدة":"New plot","حفظ القطعة":"Save plot","إلغاء":"Cancel","تأكيد":"Confirm","تفصيل القطعة":"Plot details","لا حصاد بعد":"No harvest yet","مربح":"Profitable","هامش ضعيف":"Thin margin","خسارة":"Loss","مؤشرات الأداء":"Performance indicators","ربح المتر المربع":"Profit per m²","تكلفة الإنتاج/كغ":"Production cost / kg","متوسط سعر البيع/كغ":"Avg selling price / kg","إجمالي المحصول":"Total harvest","نسبة استرداد التكلفة":"Cost recovery ratio","التكلفة مقابل الإيراد لكل قطعة":"Cost vs revenue per plot","القطع حسب المرحلة":"Plots by stage","توزيع الإيرادات حسب المحصول":"Revenue by crop","ترتيب القطع حسب الربح":"Plots ranked by profit","انقر على أي صف لعرض التفاصيل":"Click any row for details","التكلفة":"Cost","الإيراد":"Revenue","الربح":"Profit","الربحية":"Profitability","القطعة":"Plot","النوع":"Type","المرحلة":"Stage","المحصول":"Crop","المساحة":"Area","الحالة":"Status","إضافة قطعة":"Add plot","بحث":"Search","بيت بلاستيكي":"Greenhouse","أرض مفتوحة":"Open field","حفظ":"Save","تعديل":"Edit","حذف":"Delete","تصدير":"Export","استيراد":"Import","نسخ احتياطي":"Backup","استعادة":"Restore","نعم":"Yes","لا":"No","إضافة تكلفة":"Add cost","إضافة حصاد":"Add harvest","المخزون":"Inventory","الكمية":"Quantity","الوحدة":"Unit","السعر":"Price","التاريخ":"Date","ملاحظات":"Notes","الاسم":"Name","الوصف":"Description","الإجراءات":"Actions","لا توجد بيانات":"No data","درهم":"MAD","كغ":"kg","النمو":"Growth","الحصاد":"Harvest","الإنشاء":"Setup","الزراعة":"Planting","التفكيك":"Dismantling","طماطم":"Tomato","فلفل":"Pepper","فراولة":"Strawberry","خيار":"Cucumber","دليل سريع لاستعمال نظام الفلاحة برو.":"Quick guide to using AlFilaha Pro.","تم إنشاء الموسم":"Season created","وثيقة صادرة عن نظام الفلاحة برو":"Document issued by AlFilaha Pro","خريف":"Autumn","ربيع":"Spring","صيف":"Summer","شتاء":"Winter","الموسم":"Season","اسم الموسم":"Season name","اسم الموسم *":"Season name *","إنشاء موسم":"Create season","مستخدم":"User","الصلاحيات":"Permissions","قراءة فقط":"Read-only","مدير":"Manager","عامل":"Worker","إغلاق":"Close","التالي":"Next","السابق":"Previous","تصفية":"Filter","الكل":"All","نشط":"Active","موقوف":"Inactive","تفاصيل":"Details","العودة":"Back","تحميل":"Download","رفع ملف":"Upload file","نجاح":"Success","تحذير":"Warning","معلومة":"Info","البريد أو الرمز غير صحيح":"Incorrect email or PIN","يجب إدخال البريد والرمز":"Email and PIN are required","تم حفظ البيانات":"Data saved","تم الحذف":"Deleted","تأكيد الحذف":"Confirm delete","هل أنت متأكد؟":"Are you sure?","لا يمكن التراجع عن هذا الإجراء":"This action cannot be undone","التراجع":"Undo","تم التراجع":"Undone","اللغة":"Language","العربية":"Arabic","الإنجليزية":"English","قطع نشطة":"Active plots","المساحة الكلية":"Total area","إجمالي التكاليف":"Total costs","إجمالي الإيرادات":"Total revenue","صافي الربح":"Net profit","هامش الربح":"Profit margin","مزروعة":"planted","بيوت":"greenhouses","حقول":"fields","قطع":"plots","تنبيه المخزون":"Stock alert","مادة بلغت أو تجاوزت حدّ التنبيه":"item(s) at or above alert threshold","نظرة شاملة على موسم":"Overview of season","المؤشرات المالية والإنتاجية لكل ضيعتك":"financial and production indicators for your farm","إضافة مادة":"Add item","حدّ التنبيه":"Alert threshold","الرصيد":"Balance","مصروف":"Expense","إيراد":"Income","تقرير الموسم":"Season report","تقرير الربحية":"Profitability report","ملخص مالي":"Financial summary","التكاليف حسب النوع":"Costs by type","المحاصيل":"Crops","المهام":"Tasks","الآفات":"Pests","مراحل النمو":"Growth stages","بيانات القطعة":"Plot data","سجل التكاليف":"Cost log","سجل الحصاد":"Harvest log","سعر الوحدة":"Unit price","المجموع":"Total","صنف":"Grade","كمية (كغ)":"Quantity (kg)","تاريخ الحصاد":"Harvest date","تاريخ التكلفة":"Cost date","نوع التكلفة":"Cost type","بذور":"Seeds","سماد":"Fertilizer","مبيد":"Pesticide","يد عاملة":"Labor","ماء":"Water","كهرباء":"Electricity","نقل":"Transport","أخرى":"Other","بلاستيك":"Plastic","هيكل":"Structure","ري":"Irrigation","صيانة":"Maintenance","تسويق":"Marketing","تعبئة":"Packaging","ضريبة":"Tax","إيجار":"Rent","تأمين":"Insurance","أدوات":"Tools","وقود":"Fuel","اشتراكات":"Subscriptions","خدمات":"Services","مبيعات":"Sales","زبون":"Customer","قناة البيع":"Sales channel","سوق":"Market","تصدير خارجي":"Export channel","محلي":"Local","جملة":"Wholesale","تقسيط":"Retail","مزارع":"Farmer","ضيعة":"Farm","أكادير":"Agadir","المغرب":"Morocco","درهم مغربي":"Moroccan Dirham","لا توجد قطع في هذا الموسم":"No plots in this season","أضف أول قطعة للبدء":"Add your first plot to get started","عرض الكل":"View all","تحديث":"Refresh","إعدادات عامة":"General settings","المستخدمون":"Users","سجل التدقيق":"Audit log","خطر":"Danger","مسح البيانات":"Clear data","إعادة تعيين":"Reset","نسخة احتياطية JSON":"JSON backup","استيراد نسخة":"Import backup","تنزيل النسخة":"Download backup","اللغة / Language":"Language / اللغة","، أضف كل عملية قطف بكميتها وجودتها وسعر بيع الكيلوغرام. يُحسب الإيراد والربح تلقائياً.":", add each harvest with quantity, grade and selling price per kg. Revenue and profit are calculated automatically.","أرض مفتوحة — الفراولة":"Open field — strawberry","أسمدة":"Fertilizers","أضف قطعتك الأولى لبدء تتبّع التكاليف والحصاد":"Add your first plot to start tracking costs and harvest","أضف قطعك الأرضية":"Add your plots","أضف مهمة خاصة لهذه المرحلة...":"Add a custom task for this stage...","أنفاق داخل أوراق وثمار الطماطم، تلف الأوراق.":"Tunnels in tomato leaves and fruit; leaf damage.","أُضيفت المهمة":"Task added","إجمالي الإيراد":"Total revenue","إجمالي التكلفة":"Total cost","إجمالي المدخلات":"Total inputs","إدارة الأراضي المفتوحة (Plein champ) — تتبّع التكاليف والإنتاج لكل قطعة.":"Open-field management — track costs and production per plot.","إدارة البيوت البلاستيكية — كل بيت بحساباته الخاصة من التكاليف والحصاد والأرباح.":"Greenhouse management — each house with its own costs, harvest and profit.","إزالة بقايا النباتات وإخراجها من البيت":"Remove plant residues from the greenhouse","إصلاح أغطية بلاستيكية":"Repair plastic covers","إضافة مادة مخزون":"Add stock item","إضافة مهمة":"Add task","إعادة الضبط":"Reset","إنشاء الموسم":"Create season","إنشاء النظام":"System setup","احترام مسافات الغرس الموصى بها حسب المحصول":"Respect recommended planting spacing for the crop","احفظ نسخة احتياطية":"Save a backup","اختر الموسم الفلاحي":"Choose the crop season","استيراد البيانات":"Import data","استيراد نسخة احتياطية":"Import backup","اسم القطعة":"Plot name","اسم القطعة مطلوب":"Plot name is required","اسم المادة مطلوب":"Item name is required","اسم الموسم مطلوب":"Season name is required","اصفرار الأوراق، ندوة عسلية، نقل الفيروسات (خاصة الطماطم).":"Yellowing leaves, honeydew, virus transmission (especially tomato).","اطبع التقارير":"Print reports","افتح أي قطعة وانتقل إلى تبويب":"Open any plot and go to the tab","اكتب نص المهمة":"Enter the task text","الأمراض الفطرية (البياض/البوتريتيس)":"Fungal diseases (mildew/botrytis)","البريد الإلكتروني غير معروف":"Unknown email","البناء":"Construction","البيان مطلوب":"Description is required","التبريد والتخزين السريع لتقليل الفاقد":"Quick cooling and storage to reduce losses","التربس":"Thrips","التقليم والتدعيم وربط النباتات عند الحاجة":"Pruning, staking and tying plants when needed","التكاليف (":"Costs (","التوتا أبسولوتا":"Tuta absoluta","الحصاد (":"Harvest (","الحصاد المتوقّع":"Expected harvest","الخنافس المفترسة (الدعسوقة)، صابون بوتاسي، رشّ موضعي عند الحاجة.":"Predatory beetles (ladybugs), potassium soap, spot spraying when needed.","الذبابة البيضاء":"Whitefly","الربح / م²":"Profit / m²","الربح لكل متر مربع":"Profit per square meter","الرمز السري غير صحيح":"Incorrect PIN","السعر يجب ألا يكون سالباً":"Price must not be negative","العنكبوت الأحمر":"Spider mite","الغرس":"Planting","الفرز حسب الجودة (صنف A / B) والتوزين":"Sorting by grade (A / B) and weighing","الفلاحة":"Farming","القطعة غير موجودة":"Plot not found","القطعة:":"Plot:","القطف في الصباح الباكر للحفاظ على الجودة":"Harvest early morning to preserve quality","الكمية يجب ألا تكون سالبة":"Quantity must not be negative","الكمية يجب أن تكون موجبة":"Quantity must be positive","المحاصيل النشطة":"Active crops","المراحل والتتبّع":"Stages & tracking","المراقبة الأسبوعية للآفات والأمراض ووضع المصائد اللاصقة":"Weekly pest/disease scouting and sticky traps","المرحلة الآن: «":"Current stage: «","المساحة الإجمالية":"Total area","المساحة يجب أن تكون رقماً موجباً":"Area must be a positive number","الملف غير صالح — بنية بيانات غير معروفة":"Invalid file — unknown data structure","المنّ (القمل)":"Aphids","انتقلت القطعة إلى مرحلة «":"Plot moved to stage «","باذنجان":"Eggplant","بحث باسم القطعة أو المحصول...":"Search by plot or crop name...","بذور وشتلات":"Seeds & seedlings","برمجة الري الأولي الخفيف والمتكرر":"Schedule light, frequent initial irrigation","برو":"Pro","بصل":"Onion","بطاطس":"Potato","بطيخ أصفر":"Yellow melon","بقع باهتة على الأوراق، خيوط دقيقة، يزداد في الجو الحار الجاف.":"Pale leaf spots, fine webs; worse in hot dry weather.","بقع، عفن رمادي أو دقيقي، خاصة مع الرطوبة العالية.":"Spots, gray or powdery mold, especially with high humidity.","بيت بلاستيكي 1":"Greenhouse 1","بيت بلاستيكي 2":"Greenhouse 2","بيت بلاستيكي 3":"Greenhouse 3","بيت مجهز بنظام تنقيط وتدفئة ليلية.":"House equipped with drip irrigation and night heating.","تاريخ الحصاد يجب أن يكون بعد الغرس":"Harvest date must be after planting","تاريخ الغرس":"Planting date","تاريخ الغرس مطلوب":"Planting date is required","تثبيت القواعد والأقواس والهيكل المعدني بإحكام":"Secure bases, arches and metal structure","تجمّعات على البراعم، تجعّد الأوراق، ندوة عسلية.":"Clusters on buds, leaf curling, honeydew.","تجهيز الأرض للموسم أو الدورة المقبلة":"Prepare land for the next season or cycle","تجهيز الأرض وتسويتها وتوجيه البيت حسب الرياح المهيمنة":"Prepare and level land; orient the house to prevailing winds","تجهيز صناديق التعبئة للتصدير":"Prepare packing crates for export","تحتاج تموين":"Needs restocking","تحديد موعد القطف حسب درجة النضج والطلب":"Set harvest date by ripeness and demand","تدوين كل تدخّل (مبيد/سماد) في سجل التكاليف":"Log every intervention (pesticide/fertilizer) in the cost log","تراجع":"Undo","تراجع عن حذف":"Undo delete","تركيب أبواب وفتحات التهوية ومصدّات الرياح":"Install doors, vents and windbreaks","تركيب الغطاء البلاستيكي PE وشدّه جيداً لتفادي تجمّع الماء":"Install PE cover and tension it to avoid water pooling","تركيب شباك تظليل خفيف لحماية الشتلات الصغيرة":"Install light shade nets to protect young seedlings","تركيب مصائد صفراء ضد الذبابة البيضاء":"Install yellow traps against whitefly","تركيب وتجربة شبكة الري بالتنقيط قبل الغرس":"Install and test drip irrigation before planting","تسجيل تكلفة":"Log cost","تسجيل حصاد":"Log harvest","تسجيل كل عملية حصاد بالكمية والسعر":"Log every harvest with quantity and price","تعديل القطعة":"Edit plot","تعديل تكلفة":"Edit cost","تعديل حصاد":"Edit harvest","تعديل قطعة":"Edit plot","تعديل مادة مخزون":"Edit stock item","تعذّر التصدير":"Export failed","تعذّر الحفظ — قد تكون ذاكرة المتصفح ممتلئة":"Save failed — browser storage may be full","تعذّر قراءة الملف — تأكد أنه ملف JSON صحيح":"Could not read file — ensure it is valid JSON","تعقيم التربة أو الركيزة ومعالجتها قبل الغرس":"Sanitize soil or substrate before planting","تغيير مرحلة":"Change stage","تقدّم مرحلة":"Advance stage","تقرير جميع القطع":"All-plots report","تقرير شامل":"Full report","تقرير قطعة فلاحية":"Plot report","تكلفة إنتاج الكيلوغرام":"Cost per kilogram","تم استيراد البيانات بنجاح":"Data imported successfully","تم التراجع عن الحذف":"Delete undone","تم تبديل الموسم":"Season switched","تم تحديث التكلفة":"Cost updated","تم تحديث الحصاد":"Harvest updated","تم تحديث القطعة":"Plot updated","تم تحديث المادة":"Item updated","تم تحميل البيانات التجريبية":"Demo data loaded","تم تسجيل الحصاد":"Harvest logged","تم تصدير النسخة الاحتياطية":"Backup exported","تم تفعيل الموسم":"Season activated","تم حذف التكلفة":"Cost deleted","تم حذف الحصاد":"Harvest deleted","تم حذف القطعة":"Plot deleted","تم حذف المادة":"Item deleted","تم حذف الموسم":"Season deleted","تمت إضافة التكلفة":"Cost added","تمت إضافة القطعة":"Plot added","تمت إضافة المادة":"Item added","تمت إعادة الضبط":"Reset complete","تنظيف وتعقيم التربة والمعدّات والركيزة":"Clean and sanitize soil, equipment and substrate","تهوية جيدة، خفض الرطوبة، تجنّب الريّ المسائي، مبيدات فطرية وقائية بالتناوب.":"Good ventilation, lower humidity, avoid evening irrigation, rotate preventive fungicides.","حدّ التنبيه يجب ألا يكون سالباً":"Alert threshold must not be negative","حذف القطعة":"Delete plot","حذف الموسم":"Delete season","حذف تكلفة":"Delete cost","حذف حصاد":"Delete harvest","حذف قطعة":"Delete plot","حذف مادة":"Delete item","حذف مادة مخزون":"Delete stock item","حذف مهمة":"Delete task","حذف موسم":"Delete season","حفظ التكلفة":"Save cost","حفظ الحصاد":"Save harvest","حقل مكشوف، فراولة صنف ساباطا.":"Open field, Sabata strawberry variety.","خدوش فضّية على الأوراق والثمار، تشوّه، نقل فيروس التبقّع.":"Silver scarring on leaves and fruit, distortion, spot virus transmission.","خريف 2025":"Autumn 2025","خطورة عالية":"High risk","خطورة متوسطة":"Medium risk","خطورة منخفضة":"Low risk","خيار موسم الربيع.":"Spring-season cucumber.","دلاح":"Watermelon","راقب الربحية":"Monitor profitability","ربما تم حذفها":"It may have been deleted","ربيع 2026":"Spring 2026","رجعت القطعة إلى مرحلة «":"Plot returned to stage «","رجوع مرحلة":"Previous stage","رفع الرطوبة، أكاروسات مفترسة، رشّ متخصص عند الإصابة الشديدة.":"Raise humidity, predatory mites, specialized spray for severe infestation.","ريدوميل غولد":"Ridomil Gold","سجّل التكاليف":"Log costs","سجّل عمليات الحصاد":"Log harvests","سقي":"Irrigation","سقي بالتنقيط":"Drip irrigation","سقي بالتنقيط (شهري)":"Drip irrigation (monthly)","سقي وماء":"Water & irrigation","سماد NPK + كالسيوم":"NPK + calcium fertilizer","سماد NPK 20-20-20":"NPK 20-20-20 fertilizer","سماد عضوي + NPK":"Organic + NPK fertilizer","سماد عضوي مركّز":"Concentrated organic fertilizer","سيتم استبدال كل البيانات الحالية بمحتوى الملف. هل تريد المتابعة؟":"All current data will be replaced by the file. Continue?","سيتم حذف":"Will delete","سيُحذف الموسم":"Season will be deleted","سيُنشأ موسم جديد فارغ يمكنك إضافة قطعه.":"A new empty season will be created; you can add plots to it.","شتلات خيار":"Cucumber seedlings","شتلات طماطم هجينة":"Hybrid tomato seedlings","شتلات فراولة":"Strawberry seedlings","شتلات فلفل":"Pepper seedlings","صيانة وتخزين شبكة الري والمعدّات":"Maintain and store irrigation network and equipment","ضبط التهوية والحرارة والرطوبة داخل البيت":"Adjust ventilation, temperature and humidity inside the house","طاقة وكهرباء":"Energy & electricity","طلب الغطاء البلاستيكي الجديد":"Order new plastic cover","عام":"General","عامل — قراءة فقط":"Worker — read-only","عدد القطع":"Plot count","عدد المواد":"Item count","فحص الغطاء والهيكل وإصلاح ما تضرّر":"Inspect cover and structure; repair damage","فحص جودة الشتلات وخلوّها من الأمراض":"Check seedling quality and disease-free status","فشل قراءة التخزين":"Storage read failed","فلفل أخضر للتصدير.":"Green pepper for export.","فلفل حار":"Hot pepper","في المخزون":"In stock","في تبويب":"In tab","قطعة":"plot","قيمة المخزون":"Stock value","كالسيوم سائل":"Liquid calcium","كهرباء التدفئة":"Heating electricity","كوسة":"Zucchini","كيس":"Bag","كيس 25كغ":"25 kg bag","كيس، لتر، كغ...":"Bag, liter, kg...","لا توجد أراضي مفتوحة":"No open fields","لا توجد بيوت بلاستيكية":"No greenhouses","لتر":"Liter","لوبيا":"Beans","مادة":"Item","مادة بالمخزون":"Stock item","مبيد حشري":"Insecticide","مبيد فطري وقائي":"Preventive fungicide","مبيدات":"Pesticides","مبيدات ومواد وقاية":"Pesticides & protection","متابعة الري والتسميد حسب مرحلة النمو (الجدولة)":"Follow irrigation and fertilization by growth stage (schedule)","متوسط":"Average","متوسط سعر البيع / كغ":"Avg selling price / kg","مثال: بيت بلاستيكي 4":"Example: Greenhouse 4","مثال: ريدوميل غولد":"Example: Ridomil Gold","مثال: سماد NPK 20-20-20":"Example: NPK 20-20-20 fertilizer","مرحباً":"Hello","مصائد زرقاء لاصقة، شباك دقيقة، أعداء طبيعيون، تدخّل كيميائي محدود.":"Blue sticky traps, fine nets, natural enemies, limited chemical intervention.","مصائد صفراء لاصقة، شباك مانعة للحشرات على الفتحات، إطلاق أعداء طبيعيين، رشّ موضعي عند تجاوز العتبة.":"Yellow sticky traps, insect nets on openings, release natural enemies, spot spray when threshold exceeded.","مصائد فرمونية للمراقبة، إزالة الأوراق المصابة، التناوب بين مواد فعّالة مختلفة لتفادي المقاومة.":"Pheromone traps for monitoring, remove infected leaves, rotate actives to avoid resistance.","مصاريف أخرى":"Other expenses","مقارنة المواسم الفلاحية":"Compare crop seasons","مكافحة الآفات":"Pest control","ملاحظات إضافية حول القطعة...":"Additional notes about the plot...","من":"from","من أسفل الشريط الجانبي يمكنك التنقل بين المواسم أو إنشاء موسم جديد من صفحة الإعدادات.":"At the bottom of the sidebar you can switch seasons or create a new one from Settings.","من صفحة":"From page","مهام مرحلة «":"Tasks for stage «","مواد منخفضة":"Low-stock items","موسم فلاحي جديد":"New crop season","موسم:":"Season:","نسبة استرجاع التكلفة":"Cost recovery ratio","نظرة عامة":"Overview","هذه العملية متاحة للمدير فقط — حسابك للقراءة فقط":"This action is manager-only — your account is read-only","هل تريد حذف":"Do you want to delete","هل تريد حذف عملية الحصاد بتاريخ":"Do you want to delete the harvest dated","هل تريد حذف كل البيانات والعودة إلى البيانات التجريبية؟ لا يمكن التراجع.":"Delete all data and restore demo data? This cannot be undone.","وثيقة صادرة عن نظام الفلاحة برو ·":"Document issued by AlFilaha Pro ·","وحدة القياس مطلوبة":"Unit of measure is required","يد عاملة قطف":"Harvest labor","يد عاملة موسمية":"Seasonal labor","يرجى تصحيح الحقول المعلّمة":"Please fix the highlighted fields","يستعمل النظام إشارة مرور: أخضر = هامش ربح فوق 20%، أصفر = هامش ضعيف 0-20%، أحمر = خسارة.":"The system uses a traffic light: green = margin > 20%, yellow = thin 0–20%, red = loss.","خطوات الاستعمال":"How to use","سجل آخر العمليات":"Recent activity","سجل الحصاد والمبيعات":"Harvest & sales log","تقارير القطع الفردية":"Individual plot reports","التواريخ":"Dates","الخلاصة المالية":"Financial summary","المواسم الفلاحية":"Crop seasons","النسخ الاحتياطي":"Backup","معلومات القطعة":"Plot information","توزيع التكاليف حسب النوع":"Costs by type","المرحلة التالية":"Next stage","المرحلة السابقة":"Previous stage","محصودة":"harvested","قطعة مزروعة":"planted plots","انقر عموداً لفتح القطعة":"Click a column to open the plot","انقر عموداً لفتح":"Click a column to open","لا توجد إيرادات مسجّلة بعد.":"No revenue recorded yet.","ERP فلاحي":"Farm ERP","أرض مفتوحة - الفراولة":"Open field - strawberry","إضافة":"Add","غرس":"Planted","إضافة بيت بلاستيكي":"Add greenhouse","إضافة أرض مفتوحة":"Add open field","مادة جديدة":"New item","موسم":"Season","تفعيل":"Activate","تصدير البيانات (JSON)":"Export data (JSON)","إعادة ضبط البيانات التجريبية":"Reset demo data","هكتار":"ha","م²":"m²","لا توجد عمليات":"No activity yet","إدارة المواسم والنسخ الاحتياطي للبيانات وسجل العمليات.":"Manage seasons, data backup, and activity log.","جميع البيانات محفوظة تلقائياً في ذاكرة المتصفح (localStorage). يُنصح بتصدير نسخة احتياطية بانتظام.":"All data is saved automatically in browser storage (localStorage). Export a backup regularly.","متابعة؟":"Continue?","وكل قطعه. متابعة؟":"and all its plots. Continue?","التقارير القابلة للطباعة ومقارنة أداء المواسم الفلاحية المختلفة.":"Printable reports and season performance comparison.","طباعة المقارنة":"Print comparison","تقرير مفصّل لكل قطعة (تكاليف، حصاد، أرباح)":"Detailed report per plot (costs, harvest, profit)","القطع":"Plots","رجوع":"Back","تقرير":"Report","طباعة الجدول":"Print table","البيان":"Description","الجودة":"Grade","سعر الكيلو":"Price / kg","المادة":"Item","الصنف":"Category","الكمية المتوفرة":"Available qty","المستوى":"Level","القيمة":"Value","تقرير القطعة":"Plot report","المحصول (كغ)":"Harvest (kg)","المؤشرات المالية والإنتاجية لكل ضيعتك.":"financial and production indicators for your farm.","عرض موحّد لجميع القطع في الموسم النشط مع الإجماليات. يمكنك الفلترة حسب النوع.":"Unified view of all plots in the active season with totals. Filter by type.","إدارة مخزون مدخلات الإنتاج — الأدوية والمبيدات والأسمدة، مع تنبيه عند انخفاض الكمية.":"Manage production inputs — pesticides and fertilizers, with low-stock alerts.","نظام إشارة المرور":"Traffic-light system","الأدوار":"Roles","انتقلت القطعة إلى مرحلة":"Plot moved to stage","رجعت القطعة إلى مرحلة":"Plot returned to stage","إدارة مخزون مدخلات الإنتاج — الأدوية والمبيدات والأسمدة، مع تنبيه عند انخفاض الكمية تحت حدّ معيّن.":"Manage production inputs — pesticides and fertilizers, with alerts when stock falls below a threshold.","🚦 نظام إشارة المرور":"🚦 Traffic-light system","👥 الأدوار":"👥 Roles"};
+var I18N_EN = {"الفلاحة برو":"AlFilaha Pro","الفلاحة برو — نظام تدبير الضيعات الفلاحية":"AlFilaha Pro — Farm Management System","نظام تدبير الضيعات الفلاحية — المغرب":"Farm management system — Morocco","مرحباً بك 🌱":"Welcome back 🌱","ولوج إلى نظام تسيير المزرعة والإنتاج":"Sign in to the farm and production system","البريد الإلكتروني":"Email","الرمز السري (PIN)":"PIN code","تذكّرني على هذا الجهاز":"Remember me on this device","تسجيل الدخول":"Sign in","حسابات تجريبية:":"Demo accounts:","ولوج فوري بنقرة واحدة":"Instant one-click sign-in","مدير الضيعة":"Farm manager","عامل (قراءة فقط)":"Worker (read-only)","© 2026 الفلاحة برو · أكادير، المغرب — الإصدار 1.0":"© 2026 AlFilaha Pro · Agadir, Morocco — v1.0","لوحة القيادة":"Dashboard","القطع الأرضية":"Plots","البيوت البلاستيكية":"Greenhouses","الأراضي المفتوحة":"Open fields","جميع القطع":"All plots","التسيير":"Operations","الأدوية والأسمدة":"Inputs & fertilizers","التقارير":"Reports","النظام":"System","الإعدادات والنسخ":"Settings & backup","الإعدادات والنسخ الاحتياطي":"Settings & backup","المساعدة":"Help","دليل الاستعمال":"User guide","الموسم الفلاحي":"Crop season","طباعة":"Print","خروج":"Sign out","قطعة جديدة":"New plot","حفظ القطعة":"Save plot","إلغاء":"Cancel","تأكيد":"Confirm","تفصيل القطعة":"Plot details","لا حصاد بعد":"No harvest yet","مربح":"Profitable","هامش ضعيف":"Thin margin","خسارة":"Loss","مؤشرات الأداء":"Performance indicators","ربح المتر المربع":"Profit per m²","تكلفة الإنتاج/كغ":"Production cost / kg","متوسط سعر البيع/كغ":"Avg selling price / kg","إجمالي المحصول":"Total harvest","نسبة استرداد التكلفة":"Cost recovery ratio","التكلفة مقابل الإيراد لكل قطعة":"Cost vs revenue per plot","القطع حسب المرحلة":"Plots by stage","توزيع الإيرادات حسب المحصول":"Revenue by crop","ترتيب القطع حسب الربح":"Plots ranked by profit","انقر على أي صف لعرض التفاصيل":"Click any row for details","التكلفة":"Cost","الإيراد":"Revenue","الربح":"Profit","الربحية":"Profitability","القطعة":"Plot","النوع":"Type","المرحلة":"Stage","المحصول":"Crop","المساحة":"Area","الحالة":"Status","إضافة قطعة":"Add plot","بحث":"Search","بيت بلاستيكي":"Greenhouse","أرض مفتوحة":"Open field","حفظ":"Save","تعديل":"Edit","حذف":"Delete","تصدير":"Export","استيراد":"Import","نسخ احتياطي":"Backup","استعادة":"Restore","نعم":"Yes","لا":"No","إضافة تكلفة":"Add cost","إضافة حصاد":"Add harvest","المخزون":"Inventory","الكمية":"Quantity","الوحدة":"Unit","السعر":"Price","التاريخ":"Date","ملاحظات":"Notes","الاسم":"Name","الوصف":"Description","الإجراءات":"Actions","لا توجد بيانات":"No data","درهم":"MAD","كغ":"kg","النمو":"Growth","الحصاد":"Harvest","الإنشاء":"Setup","الزراعة":"Planting","التفكيك":"Dismantling","طماطم":"Tomato","فلفل":"Pepper","فراولة":"Strawberry","خيار":"Cucumber","دليل سريع لاستعمال نظام الفلاحة برو.":"Quick guide to using AlFilaha Pro.","تم إنشاء الموسم":"Season created","وثيقة صادرة عن نظام الفلاحة برو":"Document issued by AlFilaha Pro","خريف":"Autumn","ربيع":"Spring","صيف":"Summer","شتاء":"Winter","الموسم":"Season","اسم الموسم":"Season name","اسم الموسم *":"Season name *","إنشاء موسم":"Create season","مستخدم":"User","الصلاحيات":"Permissions","قراءة فقط":"Read-only","مدير":"Manager","عامل":"Worker","إغلاق":"Close","التالي":"Next","السابق":"Previous","تصفية":"Filter","الكل":"All","نشط":"Active","موقوف":"Inactive","تفاصيل":"Details","العودة":"Back","تحميل":"Download","رفع ملف":"Upload file","نجاح":"Success","تحذير":"Warning","معلومة":"Info","البريد أو الرمز غير صحيح":"Incorrect email or PIN","يجب إدخال البريد والرمز":"Email and PIN are required","تم حفظ البيانات":"Data saved","تم الحذف":"Deleted","تأكيد الحذف":"Confirm delete","هل أنت متأكد؟":"Are you sure?","لا يمكن التراجع عن هذا الإجراء":"This action cannot be undone","التراجع":"Undo","تم التراجع":"Undone","اللغة":"Language","العربية":"Arabic","الإنجليزية":"English","قطع نشطة":"Active plots","المساحة الكلية":"Total area","إجمالي التكاليف":"Total costs","إجمالي الإيرادات":"Total revenue","صافي الربح":"Net profit","هامش الربح":"Profit margin","مزروعة":"planted","بيوت":"greenhouses","حقول":"fields","قطع":"plots","تنبيه المخزون":"Stock alert","مادة بلغت أو تجاوزت حدّ التنبيه":"item(s) at or above alert threshold","نظرة شاملة على موسم":"Overview of season","المؤشرات المالية والإنتاجية لكل ضيعتك":"financial and production indicators for your farm","إضافة مادة":"Add item","حدّ التنبيه":"Alert threshold","الرصيد":"Balance","مصروف":"Expense","إيراد":"Income","تقرير الموسم":"Season report","تقرير الربحية":"Profitability report","ملخص مالي":"Financial summary","التكاليف حسب النوع":"Costs by type","المحاصيل":"Crops","المهام":"Tasks","الآفات":"Pests","مراحل النمو":"Growth stages","بيانات القطعة":"Plot data","سجل التكاليف":"Cost log","سجل الحصاد":"Harvest log","سعر الوحدة":"Unit price","المجموع":"Total","صنف":"Grade","كمية (كغ)":"Quantity (kg)","تاريخ الحصاد":"Harvest date","تاريخ التكلفة":"Cost date","نوع التكلفة":"Cost type","بذور":"Seeds","سماد":"Fertilizer","مبيد":"Pesticide","يد عاملة":"Labor","ماء":"Water","كهرباء":"Electricity","نقل":"Transport","أخرى":"Other","بلاستيك":"Plastic","هيكل":"Structure","ري":"Irrigation","صيانة":"Maintenance","تسويق":"Marketing","تعبئة":"Packaging","ضريبة":"Tax","إيجار":"Rent","تأمين":"Insurance","أدوات":"Tools","وقود":"Fuel","اشتراكات":"Subscriptions","خدمات":"Services","مبيعات":"Sales","زبون":"Customer","قناة البيع":"Sales channel","سوق":"Market","تصدير خارجي":"Export channel","محلي":"Local","جملة":"Wholesale","تقسيط":"Retail","مزارع":"Farmer","ضيعة":"Farm","أكادير":"Agadir","المغرب":"Morocco","درهم مغربي":"Moroccan Dirham","لا توجد قطع في هذا الموسم":"No plots in this season","أضف أول قطعة للبدء":"Add your first plot to get started","عرض الكل":"View all","تحديث":"Refresh","إعدادات عامة":"General settings","المستخدمون":"Users","سجل التدقيق":"Audit log","خطر":"Danger","مسح البيانات":"Clear data","إعادة تعيين":"Reset","نسخة احتياطية JSON":"JSON backup","استيراد نسخة":"Import backup","تنزيل النسخة":"Download backup","اللغة / Language":"Language / اللغة","، أضف كل عملية قطف بكميتها وجودتها وسعر بيع الكيلوغرام. يُحسب الإيراد والربح تلقائياً.":", add each harvest with quantity, grade and selling price per kg. Revenue and profit are calculated automatically.","أرض مفتوحة — الفراولة":"Open field — strawberry","أسمدة":"Fertilizers","أضف قطعتك الأولى لبدء تتبّع التكاليف والحصاد":"Add your first plot to start tracking costs and harvest","أضف قطعك الأرضية":"Add your plots","أضف مهمة خاصة لهذه المرحلة...":"Add a custom task for this stage...","أنفاق داخل أوراق وثمار الطماطم، تلف الأوراق.":"Tunnels in tomato leaves and fruit; leaf damage.","أُضيفت المهمة":"Task added","إجمالي الإيراد":"Total revenue","إجمالي التكلفة":"Total cost","إجمالي المدخلات":"Total inputs","إدارة الأراضي المفتوحة (Plein champ) — تتبّع التكاليف والإنتاج لكل قطعة.":"Open-field management — track costs and production per plot.","إدارة البيوت البلاستيكية — كل بيت بحساباته الخاصة من التكاليف والحصاد والأرباح.":"Greenhouse management — each house with its own costs, harvest and profit.","إزالة بقايا النباتات وإخراجها من البيت":"Remove plant residues from the greenhouse","إصلاح أغطية بلاستيكية":"Repair plastic covers","إضافة مادة مخزون":"Add stock item","إضافة مهمة":"Add task","إعادة الضبط":"Reset","إنشاء الموسم":"Create season","إنشاء النظام":"System setup","احترام مسافات الغرس الموصى بها حسب المحصول":"Respect recommended planting spacing for the crop","احفظ نسخة احتياطية":"Save a backup","اختر الموسم الفلاحي":"Choose the crop season","استيراد البيانات":"Import data","استيراد نسخة احتياطية":"Import backup","اسم القطعة":"Plot name","اسم القطعة مطلوب":"Plot name is required","اسم المادة مطلوب":"Item name is required","اسم الموسم مطلوب":"Season name is required","اصفرار الأوراق، ندوة عسلية، نقل الفيروسات (خاصة الطماطم).":"Yellowing leaves, honeydew, virus transmission (especially tomato).","اطبع التقارير":"Print reports","افتح أي قطعة وانتقل إلى تبويب":"Open any plot and go to the tab","اكتب نص المهمة":"Enter the task text","الأمراض الفطرية (البياض/البوتريتيس)":"Fungal diseases (mildew/botrytis)","البريد الإلكتروني غير معروف":"Unknown email","البناء":"Construction","البيان مطلوب":"Description is required","التبريد والتخزين السريع لتقليل الفاقد":"Quick cooling and storage to reduce losses","التربس":"Thrips","التقليم والتدعيم وربط النباتات عند الحاجة":"Pruning, staking and tying plants when needed","التكاليف (":"Costs (","التوتا أبسولوتا":"Tuta absoluta","الحصاد (":"Harvest (","الحصاد المتوقّع":"Expected harvest","الخنافس المفترسة (الدعسوقة)، صابون بوتاسي، رشّ موضعي عند الحاجة.":"Predatory beetles (ladybugs), potassium soap, spot spraying when needed.","الذبابة البيضاء":"Whitefly","الربح / م²":"Profit / m²","الربح لكل متر مربع":"Profit per square meter","الرمز السري غير صحيح":"Incorrect PIN","السعر يجب ألا يكون سالباً":"Price must not be negative","العنكبوت الأحمر":"Spider mite","الغرس":"Planting","الفرز حسب الجودة (صنف A / B) والتوزين":"Sorting by grade (A / B) and weighing","الفلاحة":"Farming","القطعة غير موجودة":"Plot not found","القطعة:":"Plot:","القطف في الصباح الباكر للحفاظ على الجودة":"Harvest early morning to preserve quality","الكمية يجب ألا تكون سالبة":"Quantity must not be negative","الكمية يجب أن تكون موجبة":"Quantity must be positive","المحاصيل النشطة":"Active crops","المراحل والتتبّع":"Stages & tracking","المراقبة الأسبوعية للآفات والأمراض ووضع المصائد اللاصقة":"Weekly pest/disease scouting and sticky traps","المرحلة الآن: «":"Current stage: «","المساحة الإجمالية":"Total area","المساحة يجب أن تكون رقماً موجباً":"Area must be a positive number","الملف غير صالح — بنية بيانات غير معروفة":"Invalid file — unknown data structure","المنّ (القمل)":"Aphids","انتقلت القطعة إلى مرحلة «":"Plot moved to stage «","باذنجان":"Eggplant","بحث باسم القطعة أو المحصول...":"Search by plot or crop name...","بذور وشتلات":"Seeds & seedlings","برمجة الري الأولي الخفيف والمتكرر":"Schedule light, frequent initial irrigation","برو":"Pro","بصل":"Onion","بطاطس":"Potato","بطيخ أصفر":"Yellow melon","بقع باهتة على الأوراق، خيوط دقيقة، يزداد في الجو الحار الجاف.":"Pale leaf spots, fine webs; worse in hot dry weather.","بقع، عفن رمادي أو دقيقي، خاصة مع الرطوبة العالية.":"Spots, gray or powdery mold, especially with high humidity.","بيت بلاستيكي 1":"Greenhouse 1","بيت بلاستيكي 2":"Greenhouse 2","بيت بلاستيكي 3":"Greenhouse 3","بيت مجهز بنظام تنقيط وتدفئة ليلية.":"House equipped with drip irrigation and night heating.","تاريخ الحصاد يجب أن يكون بعد الغرس":"Harvest date must be after planting","تاريخ الغرس":"Planting date","تاريخ الغرس مطلوب":"Planting date is required","تثبيت القواعد والأقواس والهيكل المعدني بإحكام":"Secure bases, arches and metal structure","تجمّعات على البراعم، تجعّد الأوراق، ندوة عسلية.":"Clusters on buds, leaf curling, honeydew.","تجهيز الأرض للموسم أو الدورة المقبلة":"Prepare land for the next season or cycle","تجهيز الأرض وتسويتها وتوجيه البيت حسب الرياح المهيمنة":"Prepare and level land; orient the house to prevailing winds","تجهيز صناديق التعبئة للتصدير":"Prepare packing crates for export","تحتاج تموين":"Needs restocking","تحديد موعد القطف حسب درجة النضج والطلب":"Set harvest date by ripeness and demand","تدوين كل تدخّل (مبيد/سماد) في سجل التكاليف":"Log every intervention (pesticide/fertilizer) in the cost log","تراجع":"Undo","تراجع عن حذف":"Undo delete","تركيب أبواب وفتحات التهوية ومصدّات الرياح":"Install doors, vents and windbreaks","تركيب الغطاء البلاستيكي PE وشدّه جيداً لتفادي تجمّع الماء":"Install PE cover and tension it to avoid water pooling","تركيب شباك تظليل خفيف لحماية الشتلات الصغيرة":"Install light shade nets to protect young seedlings","تركيب مصائد صفراء ضد الذبابة البيضاء":"Install yellow traps against whitefly","تركيب وتجربة شبكة الري بالتنقيط قبل الغرس":"Install and test drip irrigation before planting","تسجيل تكلفة":"Log cost","تسجيل حصاد":"Log harvest","تسجيل كل عملية حصاد بالكمية والسعر":"Log every harvest with quantity and price","تعديل القطعة":"Edit plot","تعديل تكلفة":"Edit cost","تعديل حصاد":"Edit harvest","تعديل قطعة":"Edit plot","تعديل مادة مخزون":"Edit stock item","تعذّر التصدير":"Export failed","تعذّر الحفظ — قد تكون ذاكرة المتصفح ممتلئة":"Save failed — browser storage may be full","تعذّر قراءة الملف — تأكد أنه ملف JSON صحيح":"Could not read file — ensure it is valid JSON","تعقيم التربة أو الركيزة ومعالجتها قبل الغرس":"Sanitize soil or substrate before planting","تغيير مرحلة":"Change stage","تقدّم مرحلة":"Advance stage","تقرير جميع القطع":"All-plots report","تقرير شامل":"Full report","تقرير قطعة فلاحية":"Plot report","تكلفة إنتاج الكيلوغرام":"Cost per kilogram","تم استيراد البيانات بنجاح":"Data imported successfully","تم التراجع عن الحذف":"Delete undone","تم تبديل الموسم":"Season switched","تم تحديث التكلفة":"Cost updated","تم تحديث الحصاد":"Harvest updated","تم تحديث القطعة":"Plot updated","تم تحديث المادة":"Item updated","تم تحميل البيانات التجريبية":"Demo data loaded","تم تسجيل الحصاد":"Harvest logged","تم تصدير النسخة الاحتياطية":"Backup exported","تم تفعيل الموسم":"Season activated","تم حذف التكلفة":"Cost deleted","تم حذف الحصاد":"Harvest deleted","تم حذف القطعة":"Plot deleted","تم حذف المادة":"Item deleted","تم حذف الموسم":"Season deleted","تمت إضافة التكلفة":"Cost added","تمت إضافة القطعة":"Plot added","تمت إضافة المادة":"Item added","تمت إعادة الضبط":"Reset complete","تنظيف وتعقيم التربة والمعدّات والركيزة":"Clean and sanitize soil, equipment and substrate","تهوية جيدة، خفض الرطوبة، تجنّب الريّ المسائي، مبيدات فطرية وقائية بالتناوب.":"Good ventilation, lower humidity, avoid evening irrigation, rotate preventive fungicides.","حدّ التنبيه يجب ألا يكون سالباً":"Alert threshold must not be negative","حذف القطعة":"Delete plot","حذف الموسم":"Delete season","حذف تكلفة":"Delete cost","حذف حصاد":"Delete harvest","حذف قطعة":"Delete plot","حذف مادة":"Delete item","حذف مادة مخزون":"Delete stock item","حذف مهمة":"Delete task","حذف موسم":"Delete season","حفظ التكلفة":"Save cost","حفظ الحصاد":"Save harvest","حقل مكشوف، فراولة صنف ساباطا.":"Open field, Sabata strawberry variety.","خدوش فضّية على الأوراق والثمار، تشوّه، نقل فيروس التبقّع.":"Silver scarring on leaves and fruit, distortion, spot virus transmission.","خريف 2025":"Autumn 2025","خطورة عالية":"High risk","خطورة متوسطة":"Medium risk","خطورة منخفضة":"Low risk","خيار موسم الربيع.":"Spring-season cucumber.","دلاح":"Watermelon","راقب الربحية":"Monitor profitability","ربما تم حذفها":"It may have been deleted","ربيع 2026":"Spring 2026","رجعت القطعة إلى مرحلة «":"Plot returned to stage «","رجوع مرحلة":"Previous stage","رفع الرطوبة، أكاروسات مفترسة، رشّ متخصص عند الإصابة الشديدة.":"Raise humidity, predatory mites, specialized spray for severe infestation.","ريدوميل غولد":"Ridomil Gold","سجّل التكاليف":"Log costs","سجّل عمليات الحصاد":"Log harvests","سقي":"Irrigation","سقي بالتنقيط":"Drip irrigation","سقي بالتنقيط (شهري)":"Drip irrigation (monthly)","سقي وماء":"Water & irrigation","سماد NPK + كالسيوم":"NPK + calcium fertilizer","سماد NPK 20-20-20":"NPK 20-20-20 fertilizer","سماد عضوي + NPK":"Organic + NPK fertilizer","سماد عضوي مركّز":"Concentrated organic fertilizer","سيتم استبدال كل البيانات الحالية بمحتوى الملف. هل تريد المتابعة؟":"All current data will be replaced by the file. Continue?","سيتم حذف":"Will delete","سيُحذف الموسم":"Season will be deleted","سيُنشأ موسم جديد فارغ يمكنك إضافة قطعه.":"A new empty season will be created; you can add plots to it.","شتلات خيار":"Cucumber seedlings","شتلات طماطم هجينة":"Hybrid tomato seedlings","شتلات فراولة":"Strawberry seedlings","شتلات فلفل":"Pepper seedlings","صيانة وتخزين شبكة الري والمعدّات":"Maintain and store irrigation network and equipment","ضبط التهوية والحرارة والرطوبة داخل البيت":"Adjust ventilation, temperature and humidity inside the house","طاقة وكهرباء":"Energy & electricity","طلب الغطاء البلاستيكي الجديد":"Order new plastic cover","عام":"General","عامل — قراءة فقط":"Worker — read-only","عدد القطع":"Plot count","عدد المواد":"Item count","فحص الغطاء والهيكل وإصلاح ما تضرّر":"Inspect cover and structure; repair damage","فحص جودة الشتلات وخلوّها من الأمراض":"Check seedling quality and disease-free status","فشل قراءة التخزين":"Storage read failed","فلفل أخضر للتصدير.":"Green pepper for export.","فلفل حار":"Hot pepper","في المخزون":"In stock","في تبويب":"In tab","قطعة":"plot","قيمة المخزون":"Stock value","كالسيوم سائل":"Liquid calcium","كهرباء التدفئة":"Heating electricity","كوسة":"Zucchini","كيس":"Bag","كيس 25كغ":"25 kg bag","كيس، لتر، كغ...":"Bag, liter, kg...","لا توجد أراضي مفتوحة":"No open fields","لا توجد بيوت بلاستيكية":"No greenhouses","لتر":"Liter","لوبيا":"Beans","مادة":"Item","مادة بالمخزون":"Stock item","مبيد حشري":"Insecticide","مبيد فطري وقائي":"Preventive fungicide","مبيدات":"Pesticides","مبيدات ومواد وقاية":"Pesticides & protection","متابعة الري والتسميد حسب مرحلة النمو (الجدولة)":"Follow irrigation and fertilization by growth stage (schedule)","متوسط":"Average","متوسط سعر البيع / كغ":"Avg selling price / kg","مثال: بيت بلاستيكي 4":"Example: Greenhouse 4","مثال: ريدوميل غولد":"Example: Ridomil Gold","مثال: سماد NPK 20-20-20":"Example: NPK 20-20-20 fertilizer","مرحباً":"Hello","مصائد زرقاء لاصقة، شباك دقيقة، أعداء طبيعيون، تدخّل كيميائي محدود.":"Blue sticky traps, fine nets, natural enemies, limited chemical intervention.","مصائد صفراء لاصقة، شباك مانعة للحشرات على الفتحات، إطلاق أعداء طبيعيين، رشّ موضعي عند تجاوز العتبة.":"Yellow sticky traps, insect nets on openings, release natural enemies, spot spray when threshold exceeded.","مصائد فرمونية للمراقبة، إزالة الأوراق المصابة، التناوب بين مواد فعّالة مختلفة لتفادي المقاومة.":"Pheromone traps for monitoring, remove infected leaves, rotate actives to avoid resistance.","مصاريف أخرى":"Other expenses","مقارنة المواسم الفلاحية":"Compare crop seasons","مكافحة الآفات":"Pest control","ملاحظات إضافية حول القطعة...":"Additional notes about the plot...","من":"from","من أسفل الشريط الجانبي يمكنك التنقل بين المواسم أو إنشاء موسم جديد من صفحة الإعدادات.":"At the bottom of the sidebar you can switch seasons or create a new one from Settings.","من صفحة":"From page","مهام مرحلة «":"Tasks for stage «","مواد منخفضة":"Low-stock items","موسم فلاحي جديد":"New crop season","موسم:":"Season:","نسبة استرجاع التكلفة":"Cost recovery ratio","نظرة عامة":"Overview","هذه العملية متاحة للمدير فقط — حسابك للقراءة فقط":"This action is manager-only — your account is read-only","هل تريد حذف":"Do you want to delete","هل تريد حذف عملية الحصاد بتاريخ":"Do you want to delete the harvest dated","هل تريد حذف كل البيانات والعودة إلى البيانات التجريبية؟ لا يمكن التراجع.":"Delete all data and restore demo data? This cannot be undone.","وثيقة صادرة عن نظام الفلاحة برو ·":"Document issued by AlFilaha Pro ·","وحدة القياس مطلوبة":"Unit of measure is required","يد عاملة قطف":"Harvest labor","يد عاملة موسمية":"Seasonal labor","يرجى تصحيح الحقول المعلّمة":"Please fix the highlighted fields","يستعمل النظام إشارة مرور: أخضر = هامش ربح فوق 20%، أصفر = هامش ضعيف 0-20%، أحمر = خسارة.":"The system uses a traffic light: green = margin > 20%, yellow = thin 0–20%, red = loss.","خطوات الاستعمال":"How to use","سجل آخر العمليات":"Recent activity","سجل الحصاد والمبيعات":"Harvest & sales log","تقارير القطع الفردية":"Individual plot reports","التواريخ":"Dates","الخلاصة المالية":"Financial summary","المواسم الفلاحية":"Crop seasons","النسخ الاحتياطي":"Backup","معلومات القطعة":"Plot information","توزيع التكاليف حسب النوع":"Costs by type","المرحلة التالية":"Next stage","المرحلة السابقة":"Previous stage","محصودة":"harvested","قطعة مزروعة":"planted plots","انقر عموداً لفتح القطعة":"Click a column to open the plot","انقر عموداً لفتح":"Click a column to open","لا توجد إيرادات مسجّلة بعد.":"No revenue recorded yet.","ERP فلاحي":"Farm ERP","أرض مفتوحة - الفراولة":"Open field - strawberry","إضافة":"Add","غرس":"Planted","إضافة بيت بلاستيكي":"Add greenhouse","إضافة أرض مفتوحة":"Add open field","مادة جديدة":"New item","موسم":"Season","تفعيل":"Activate","تصدير البيانات (JSON)":"Export data (JSON)","إعادة ضبط البيانات التجريبية":"Reset demo data","هكتار":"ha","م²":"m²","لا توجد عمليات":"No activity yet","إدارة المواسم والنسخ الاحتياطي للبيانات وسجل العمليات.":"Manage seasons, data backup, and activity log.","جميع البيانات محفوظة تلقائياً في ذاكرة المتصفح (localStorage). يُنصح بتصدير نسخة احتياطية بانتظام.":"All data is saved automatically in browser storage (localStorage). Export a backup regularly.","متابعة؟":"Continue?","وكل قطعه. متابعة؟":"and all its plots. Continue?","التقارير القابلة للطباعة ومقارنة أداء المواسم الفلاحية المختلفة.":"Printable reports and season performance comparison.","طباعة المقارنة":"Print comparison","تقرير مفصّل لكل قطعة (تكاليف، حصاد، أرباح)":"Detailed report per plot (costs, harvest, profit)","القطع":"Plots","رجوع":"Back","تقرير":"Report","طباعة الجدول":"Print table","البيان":"Description","الجودة":"Grade","سعر الكيلو":"Price / kg","المادة":"Item","الصنف":"Category","الكمية المتوفرة":"Available qty","المستوى":"Level","القيمة":"Value","تقرير القطعة":"Plot report","المحصول (كغ)":"Harvest (kg)","المؤشرات المالية والإنتاجية لكل ضيعتك.":"financial and production indicators for your farm.","عرض موحّد لجميع القطع في الموسم النشط مع الإجماليات. يمكنك الفلترة حسب النوع.":"Unified view of all plots in the active season with totals. Filter by type.","إدارة مخزون مدخلات الإنتاج — الأدوية والمبيدات والأسمدة، مع تنبيه عند انخفاض الكمية.":"Manage production inputs — pesticides and fertilizers, with low-stock alerts.","نظام إشارة المرور":"Traffic-light system","الأدوار":"Roles","انتقلت القطعة إلى مرحلة":"Plot moved to stage","رجعت القطعة إلى مرحلة":"Plot returned to stage","إدارة مخزون مدخلات الإنتاج — الأدوية والمبيدات والأسمدة، مع تنبيه عند انخفاض الكمية تحت حدّ معيّن.":"Manage production inputs — pesticides and fertilizers, with alerts when stock falls below a threshold.","🚦 نظام إشارة المرور":"🚦 Traffic-light system","👥 الأدوار":"👥 Roles","الموردون":"Suppliers","مورد جديد":"New supplier","حفظ المورد":"Save supplier","فاتورة مورد":"Supplier bill","حفظ الفاتورة":"Save bill","اسم المورد":"Supplier name","الهاتف":"Phone","المدينة":"City","الرقم الضريبي / ICE":"Tax / ICE number","فواتير الموردين والمستحقات — المدفوعة وغير المدفوعة.":"Supplier bills and payables — paid and unpaid.","لا يوجد موردون بعد":"No suppliers yet","أضف أول مورد لتتبع الفواتير والمستحقات":"Add your first supplier to track bills and payables","إضافة مورد":"Add supplier","إضافة فاتورة":"Add bill","فاتورة جديدة":"New bill","تعديل فاتورة":"Edit bill","الوصف / البيان":"Description","المبلغ (درهم)":"Amount (MAD)","تاريخ الاستحقاق":"Due date","مدفوعة؟":"Paid?","غير مدفوعة":"Unpaid","مدفوعة":"Paid","تاريخ الدفع":"Payment date","ملاحظة الدفع":"Payment note","نقداً، تحويل بنكي، شيك...":"Cash, bank transfer, cheque…","نطاق التكلفة":"Cost scope","قطع محددة":"Selected plots","عام (مواسم)":"General (seasons)","اختر القطع":"Select plots","اختر المواسم":"Select seasons","صورة الفاتورة":"Bill image","اختياري — تُضغط تلقائياً":"Optional — compressed automatically","حرج":"Critical","قريب الاستحقاق":"Due soon","تنبيه المستحقات":"Payables alert","فاتورة حرجة غير مدفوعة":"critical unpaid bill(s)","فاتورة قريبة الاستحقاق":"bill(s) due soon","تم حفظ المورد":"Supplier saved","تم حفظ الفاتورة":"Bill saved","تم حذف المورد":"Supplier deleted","تم حذف الفاتورة":"Bill deleted","اسم المورد مطلوب":"Supplier name is required","المبلغ يجب أن يكون موجباً":"Amount must be positive","تاريخ الاستحقاق مطلوب":"Due date is required","الوصف مطلوب":"Description is required","اختر قطعة واحدة على الأقل":"Select at least one plot","اختر موسماً واحداً على الأقل":"Select at least one season","لا يمكن حذف مورد لديه فواتير غير مدفوعة":"Cannot delete a supplier with unpaid bills","حذف المورد":"Delete supplier","حذف الفاتورة":"Delete bill","كل الفواتير":"All bills","غير المدفوعة":"Unpaid","الحرجة":"Critical","المدفوعة":"Paid","تفصيل المورد":"Supplier details","المستحقات الحرجة":"Critical payables","مقسّم حسب المساحة على القطع":"Split by area across plots","لا توجد فواتير":"No bills","مورد":"supplier","فاتورة":"bill"};
 var I18N_KEYS = Object.keys(I18N_EN).sort(function(a,b){ return b.length - a.length; });
 
 function t(ar){
@@ -896,6 +947,7 @@ function applyDocumentLang(){
 function applyChromeI18n(){
   var nav = {
     dashboard: 'لوحة القيادة',
+    suppliers: 'الموردون',
     serres: 'البيوت البلاستيكية',
     champs: 'الأراضي المفتوحة',
     all: 'جميع القطع',
@@ -1202,7 +1254,12 @@ var lastUndo = null;    // عملية حذف قابلة للتراجع
 function loadDB(){
   try{
     var raw = localStorage.getItem(STORE_KEY);
-    if(raw){ DB = JSON.parse(raw); return; }
+    if(raw){
+      DB = JSON.parse(raw);
+      if(!DB.suppliers) DB.suppliers = [];
+      if(!DB.bills) DB.bills = [];
+      return;
+    }
   }catch(e){ console.warn('فشل قراءة التخزين',e); }
   DB = seedDB();
   saveDB();
@@ -1340,11 +1397,25 @@ function seedDB(){
     {id:'st5',name:'كالسيوم سائل',category:'fertilizer',unit:'لتر',qty:4,threshold:6,unitPrice:95}
   ];
 
+  var suppliers = [
+    {id:'sup1', name:'Agritech Souss', phone:'0661000001', city:'أكادير', taxId:'ICE-123456', note:''},
+    {id:'sup2', name:'Semences Atlas', phone:'0662000002', city:'إنزكان', taxId:'', note:''}
+  ];
+  var bills = [
+    {id:'bill1', supplierId:'sup1', description:'سماد NPK جملة', amount:4500, dueDate:'2026-11-25',
+      paid:false, paidDate:'', paidNote:'', scope:'plots', plotIds:['p_serre1','p_serre2'], seasonIds:[],
+      imageData:null, linkedCostIds:[], createdAt:'2026-11-10'},
+    {id:'bill2', supplierId:'sup2', description:'شتلات طماطم', amount:2200, dueDate:'2026-12-15',
+      paid:true, paidDate:'2026-11-05', paidNote:'تحويل بنكي', scope:'plots', plotIds:['p_serre1'], seasonIds:[],
+      imageData:null, linkedCostIds:[], createdAt:'2026-10-20'}
+  ];
   return {
     seasons:[seasonA,seasonB],
     activeSeason:'s_aut25',
     plots:plots,
     stock:stock,
+    suppliers:suppliers,
+    bills:bills,
     audit:[{id:'a0',action:'إنشاء النظام',detail:'تم تحميل البيانات التجريبية',user:'النظام',at:new Date().toISOString()}]
   };
 }
@@ -1507,6 +1578,8 @@ function aggregate(plots){
 ─────────────────────────────────────────────────────────── */
 var PAGE_TITLES = {
   dashboard:'لوحة القيادة',
+  suppliers:'الموردون',
+  'supplier-detail':'تفصيل المورد',
   serres:'البيوت البلاستيكية',
   champs:'الأراضي المفتوحة',
   all:'جميع القطع',
@@ -1524,7 +1597,8 @@ function navTo(page){
   currentPage = page;
   // تفعيل عنصر القائمة
   document.querySelectorAll('.nav-item').forEach(function(n){
-    n.classList.toggle('active', n.dataset.page===page);
+    var match = n.dataset.page===page || (page==='supplier-detail' && n.dataset.page==='suppliers');
+    n.classList.toggle('active', match);
   });
   // إظهار الصفحة
   document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
@@ -1543,6 +1617,8 @@ function navTo(page){
 function renderPage(page){
   switch(page){
     case 'dashboard': renderDashboard(); break;
+    case 'suppliers': renderSuppliers(); break;
+    case 'supplier-detail': renderSupplierDetail(); break;
     case 'serres':    renderPlotList('serre'); break;
     case 'champs':    renderPlotList('champ'); break;
     case 'all':       renderAllPlots(); break;
@@ -1568,6 +1644,13 @@ function updateNavCounts(){
   var badge = document.getElementById('nav-count-stock');
   badge.textContent = DB.stock.length;
   badge.style.background = lowStock>0 ? 'var(--c-red)' : 'var(--c-leaf)';
+  var crit = criticalBills().length;
+  var sb = document.getElementById('nav-count-suppliers');
+  if(sb){
+    sb.textContent = crit || (DB.suppliers||[]).length;
+    sb.classList.toggle('badge-critical', crit>0);
+    sb.style.background = crit>0 ? 'var(--c-red)' : 'var(--c-leaf)';
+  }
 }
 
 /* ───────────────────────────────────────────────────────────
@@ -1580,11 +1663,24 @@ function renderDashboard(){
   var season = activeSeason();
   var el = document.getElementById('page-dashboard');
 
+  // تنبيهات فواتير الموردين الحرجة
+  var critBills = criticalBills();
+  var warnBills = warningBills().filter(function(b){ return critBills.indexOf(b)<0; });
+  var alertsHTML = '';
+  if(critBills.length){
+    alertsHTML += '<div class="alert alert-danger" style="cursor:pointer" id="dash-suppliers-alert">'+
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>'+
+      '<span>'+t('تنبيه المستحقات')+': <strong>'+critBills.length+'</strong> '+t('فاتورة حرجة غير مدفوعة')+'</span></div>';
+  } else if(warnBills.length){
+    alertsHTML += '<div class="alert alert-warning" style="cursor:pointer" id="dash-suppliers-alert">'+
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>'+
+      '<span>'+t('تنبيه المستحقات')+': <strong>'+warnBills.length+'</strong> '+t('فاتورة قريبة الاستحقاق')+'</span></div>';
+  }
+
   // تنبيهات المخزون المنخفض
   var lowStock = DB.stock.filter(function(x){ return x.qty<=x.threshold; });
-  var alertsHTML = '';
   if(lowStock.length){
-    alertsHTML = '<div class="alert alert-warning">'+
+    alertsHTML += '<div class="alert alert-warning">'+
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>'+
       '<span>تنبيه المخزون: <strong>'+lowStock.length+'</strong> مادة بلغت أو تجاوزت حدّ التنبيه ('+
       lowStock.map(function(x){return esc(x.name);}).join('، ')+')</span></div>';
@@ -2885,6 +2981,504 @@ function clearInvalid(scope){
   scope.querySelectorAll('.error-msg.show').forEach(function(e){ e.classList.remove('show'); });
 }
 
+
+/* ───────────────────────────────────────────────────────────
+   الموردون — فواتير ومستحقات
+─────────────────────────────────────────────────────────── */
+var detailSupplierId = null;
+var editingSupplierId = null;
+var editingBillId = null;
+var billImageDraft = null;
+var suppliersFilter = 'all';
+
+function ensurePayables(){
+  if(!DB.suppliers) DB.suppliers = [];
+  if(!DB.bills) DB.bills = [];
+}
+
+function supplierById(id){
+  ensurePayables();
+  for(var i=0;i<DB.suppliers.length;i++) if(DB.suppliers[i].id===id) return DB.suppliers[i];
+  return null;
+}
+function billById(id){
+  ensurePayables();
+  for(var i=0;i<DB.bills.length;i++) if(DB.bills[i].id===id) return DB.bills[i];
+  return null;
+}
+function daysUntilDue(dueDate){
+  if(!dueDate) return 9999;
+  var due = new Date(dueDate+'T00:00:00');
+  var now = new Date(); now.setHours(0,0,0,0);
+  return Math.round((due-now)/86400000);
+}
+/** unpaid & (overdue or due within 7 days) */
+function isCriticalBill(b){
+  if(!b || b.paid) return false;
+  return daysUntilDue(b.dueDate) <= 7;
+}
+/** unpaid & due within 10 days but not yet critical */
+function isWarningBill(b){
+  if(!b || b.paid || isCriticalBill(b)) return false;
+  var d = daysUntilDue(b.dueDate);
+  return d <= 10;
+}
+function criticalBills(){ ensurePayables(); return DB.bills.filter(isCriticalBill); }
+function warningBills(){ ensurePayables(); return DB.bills.filter(isWarningBill); }
+function billStatus(b){
+  if(b.paid) return {key:'paid', cls:'paid', label:t('مدفوعة')};
+  if(isCriticalBill(b)) return {key:'critical', cls:'critical', label:t('حرج')};
+  if(isWarningBill(b)) return {key:'warning', cls:'warning', label:t('قريب الاستحقاق')};
+  return {key:'ok', cls:'ok', label:t('غير مدفوعة')};
+}
+function billRowClass(b){
+  if(b.paid) return '';
+  if(isCriticalBill(b)) return 'bill-critical';
+  if(isWarningBill(b)) return 'bill-warning';
+  return '';
+}
+
+function compressImageFile(file, cb){
+  if(!file){ cb(null); return; }
+  var reader = new FileReader();
+  reader.onload = function(){
+    var img = new Image();
+    img.onload = function(){
+      var max = 1200;
+      var w = img.width, h = img.height;
+      if(w>max || h>max){
+        var r = Math.min(max/w, max/h);
+        w = Math.round(w*r); h = Math.round(h*r);
+      }
+      var canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      cb(canvas.toDataURL('image/jpeg', 0.72));
+    };
+    img.onerror = function(){ cb(null); };
+    img.src = reader.result;
+  };
+  reader.onerror = function(){ cb(null); };
+  reader.readAsDataURL(file);
+}
+
+function plotsForBillScope(scope, plotIds, seasonIds){
+  if(scope==='plots'){
+    return (plotIds||[]).map(plotById).filter(Boolean);
+  }
+  var set = {};
+  (seasonIds||[]).forEach(function(sid){ set[sid]=true; });
+  return DB.plots.filter(function(p){ return set[p.seasonId]; });
+}
+
+function splitAmountByArea(amount, plots){
+  var totalArea = 0;
+  plots.forEach(function(p){ totalArea += Number(p.area)||0; });
+  if(!plots.length) return [];
+  if(totalArea<=0){
+    var eq = amount/plots.length;
+    return plots.map(function(p){ return {plot:p, share:eq}; });
+  }
+  var shares = plots.map(function(p){
+    return {plot:p, share: amount * ((Number(p.area)||0)/totalArea)};
+  });
+  // fix rounding on last
+  var sum = 0;
+  for(var i=0;i<shares.length-1;i++){ shares[i].share = Math.round(shares[i].share*100)/100; sum += shares[i].share; }
+  shares[shares.length-1].share = Math.round((amount-sum)*100)/100;
+  return shares;
+}
+
+function removeLinkedCosts(bill){
+  (bill.linkedCostIds||[]).forEach(function(lc){
+    var p = plotById(lc.plotId);
+    if(!p) return;
+    p.costs = (p.costs||[]).filter(function(c){ return c.id!==lc.costId; });
+  });
+  bill.linkedCostIds = [];
+}
+
+function applyBillToPlotCosts(bill, supplier){
+  // On create/update: refresh linked costs (replace previous linked lines)
+  removeLinkedCosts(bill);
+  var plots = plotsForBillScope(bill.scope, bill.plotIds, bill.seasonIds);
+  if(!plots.length) return;
+  var shares = splitAmountByArea(Number(bill.amount)||0, plots);
+  var label = (bill.description||'') + ' — ' + (supplier?supplier.name:'');
+  bill.linkedCostIds = [];
+  shares.forEach(function(s){
+    var costId = uid('c');
+    s.plot.costs = s.plot.costs||[];
+    s.plot.costs.push({
+      id:costId, type:'other', label:label,
+      qty:1, unitPrice:s.share,
+      date: bill.dueDate || today(),
+      fromBillId: bill.id
+    });
+    bill.linkedCostIds.push({plotId:s.plot.id, costId:costId});
+  });
+}
+
+function renderSuppliers(){
+  ensurePayables();
+  detailSupplierId = null;
+  var el = document.getElementById('page-suppliers');
+  var crit = criticalBills().length;
+  var warn = warningBills().length;
+  var cards = '';
+  if(!DB.suppliers.length){
+    cards = emptyState(t('لا يوجد موردون بعد'), t('أضف أول مورد لتتبع الفواتير والمستحقات'),
+      isAdmin()?'<button class="btn btn-primary" id="btn-add-supplier">'+IC.plus+' '+t('إضافة مورد')+'</button>':'');
+  }else{
+    cards = '<div class="plots-grid">';
+    DB.suppliers.forEach(function(s){
+      var bills = DB.bills.filter(function(b){ return b.supplierId===s.id; });
+      var unpaid = bills.filter(function(b){ return !b.paid; });
+      var c = unpaid.filter(isCriticalBill).length;
+      var totalUnpaid = unpaid.reduce(function(a,b){ return a+(Number(b.amount)||0); },0);
+      cards +=
+        '<div class="card plot-card supplier-card" data-supplier-card="'+s.id+'">'+
+          '<div class="card-body">'+
+            '<div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start">'+
+              '<div><div style="font-weight:800;font-size:15px">'+esc(s.name)+'</div>'+
+                '<div style="font-size:12px;color:var(--c-muted);margin-top:4px">'+
+                  (s.city?esc(s.city):'')+(s.phone?' · '+esc(s.phone):'')+
+                '</div></div>'+
+              (c?'<span class="bill-status critical">'+t('حرج')+' '+c+'</span>':'')+
+            '</div>'+
+            '<div style="display:flex;gap:14px;margin-top:12px;font-size:12.5px">'+
+              '<div><div style="color:var(--c-subtle)">'+t('فاتورة')+'</div><strong>'+bills.length+'</strong></div>'+
+              '<div><div style="color:var(--c-subtle)">'+t('غير مدفوعة')+'</div><strong>'+unpaid.length+'</strong></div>'+
+              '<div><div style="color:var(--c-subtle)">'+t('المبلغ (درهم)')+'</div><strong>'+fmtMAD(totalUnpaid)+'</strong></div>'+
+            '</div>'+
+          '</div></div>';
+    });
+    cards += '</div>';
+  }
+
+  var filterBar =
+    '<div class="action-bar">'+
+      '<div class="action-bar-left">'+
+        '<span class="badge badge-gray">'+(DB.suppliers.length)+' '+t('مورد')+'</span>'+
+        (crit?'<span class="bill-status critical">'+crit+' '+t('حرج')+'</span>':'')+
+        (warn?'<span class="bill-status warning">'+warn+' '+t('قريب الاستحقاق')+'</span>':'')+
+      '</div>'+
+      '<div class="action-bar-right">'+
+        (isAdmin()?'<button class="btn btn-primary" id="btn-add-supplier">'+IC.plus+' '+t('إضافة مورد')+'</button>':'')+
+      '</div></div>';
+
+  el.innerHTML =
+    '<div class="page-intro">'+t('فواتير الموردين والمستحقات — المدفوعة وغير المدفوعة.')+'</div>'+
+    filterBar + cards;
+
+  var add = el.querySelector('#btn-add-supplier');
+  if(add) add.addEventListener('click', function(){ openSupplierModal(null); });
+  el.querySelectorAll('[data-supplier-card]').forEach(function(c){
+    c.addEventListener('click', function(){ openSupplierDetail(this.dataset.supplierCard); });
+  });
+}
+
+function openSupplierDetail(id){
+  detailSupplierId = id;
+  navTo('supplier-detail');
+}
+
+function renderSupplierDetail(){
+  ensurePayables();
+  var el = document.getElementById('page-supplier-detail');
+  var s = supplierById(detailSupplierId);
+  if(!s){
+    el.innerHTML = '<div class="empty-state"><p>'+t('القطعة غير موجودة')+'</p>'+
+      '<button class="btn" id="btn-back-suppliers">'+t('رجوع')+'</button></div>';
+    el.querySelector('#btn-back-suppliers').addEventListener('click', function(){ navTo('suppliers'); });
+    return;
+  }
+  var bills = DB.bills.filter(function(b){ return b.supplierId===s.id; });
+  if(suppliersFilter==='unpaid') bills = bills.filter(function(b){ return !b.paid; });
+  else if(suppliersFilter==='critical') bills = bills.filter(isCriticalBill);
+  else if(suppliersFilter==='paid') bills = bills.filter(function(b){ return b.paid; });
+
+  var rows = '';
+  if(!bills.length){
+    rows = '<tr class="empty-row"><td colspan="6">'+t('لا توجد فواتير')+'</td></tr>';
+  }else{
+    bills.sort(function(a,b){ return (a.dueDate||'')<(b.dueDate||'')? -1:1; });
+    bills.forEach(function(b){
+      var st = billStatus(b);
+      rows +=
+        '<tr class="'+billRowClass(b)+'">'+
+          '<td>'+(b.imageData?'<img class="bill-thumb" src="'+b.imageData+'" alt="">':'—')+'</td>'+
+          '<td><strong>'+esc(b.description||'')+'</strong></td>'+
+          '<td class="td-num">'+fmtMAD(b.amount)+'</td>'+
+          '<td>'+fmtDate(b.dueDate)+'</td>'+
+          '<td><span class="bill-status '+st.cls+'">'+st.label+'</span></td>'+
+          '<td>'+
+            (isAdmin()?'<button class="btn btn-sm" data-edit-bill="'+b.id+'">'+t('تعديل')+'</button> ':'')+
+            (isAdmin()?'<button class="btn btn-sm btn-danger" data-del-bill="'+b.id+'">'+t('حذف')+'</button>':'')+
+          '</td></tr>';
+    });
+  }
+
+  var filters = [
+    ['all', t('كل الفواتير')],
+    ['unpaid', t('غير المدفوعة')],
+    ['critical', t('الحرجة')],
+    ['paid', t('المدفوعة')]
+  ].map(function(f){
+    return '<button class="btn btn-sm '+(suppliersFilter===f[0]?'btn-primary':'')+'" data-bill-filter="'+f[0]+'">'+f[1]+'</button>';
+  }).join(' ');
+
+  el.innerHTML =
+    '<div class="action-bar">'+
+      '<div class="action-bar-left">'+
+        '<button class="btn btn-ghost btn-sm" id="btn-back-suppliers">'+IC.back+' '+t('رجوع')+'</button>'+
+        '<div><div style="font-weight:800;font-size:16px">'+esc(s.name)+'</div>'+
+          '<div style="font-size:12px;color:var(--c-muted)">'+
+            [s.phone,s.city,s.taxId].filter(Boolean).map(esc).join(' · ')+
+          '</div></div>'+
+      '</div>'+
+      '<div class="action-bar-right">'+
+        (isAdmin()?'<button class="btn btn-sm" id="btn-edit-supplier">'+t('تعديل')+'</button>':'')+
+        (isAdmin()?'<button class="btn btn-sm btn-danger" id="btn-del-supplier">'+t('حذف')+'</button>':'')+
+        (isAdmin()?'<button class="btn btn-primary btn-sm" id="btn-add-bill">'+IC.plus+' '+t('إضافة فاتورة')+'</button>':'')+
+      '</div></div>'+
+    '<div style="margin:10px 0;display:flex;gap:6px;flex-wrap:wrap">'+filters+'</div>'+
+    '<div class="card"><div class="table-wrap"><table>'+
+      '<thead><tr><th></th><th>'+t('الوصف / البيان')+'</th><th>'+t('المبلغ (درهم)')+'</th><th>'+t('تاريخ الاستحقاق')+'</th><th>'+t('الحالة')+'</th><th>'+t('الإجراءات')+'</th></tr></thead>'+
+      '<tbody>'+rows+'</tbody></table></div></div>'+
+    '<p style="font-size:11.5px;color:var(--c-subtle);margin-top:8px">'+t('مقسّم حسب المساحة على القطع')+'</p>';
+
+  el.querySelector('#btn-back-suppliers').addEventListener('click', function(){ navTo('suppliers'); });
+  var es = el.querySelector('#btn-edit-supplier');
+  if(es) es.addEventListener('click', function(){ openSupplierModal(s.id); });
+  var ds = el.querySelector('#btn-del-supplier');
+  if(ds) ds.addEventListener('click', function(){ deleteSupplier(s.id); });
+  var ab = el.querySelector('#btn-add-bill');
+  if(ab) ab.addEventListener('click', function(){ openBillModal(s.id, null); });
+  el.querySelectorAll('[data-bill-filter]').forEach(function(b){
+    b.addEventListener('click', function(){ suppliersFilter=this.dataset.billFilter; renderSupplierDetail(); });
+  });
+  el.querySelectorAll('[data-edit-bill]').forEach(function(b){
+    b.addEventListener('click', function(){ openBillModal(s.id, this.dataset.editBill); });
+  });
+  el.querySelectorAll('[data-del-bill]').forEach(function(b){
+    b.addEventListener('click', function(){ deleteBill(this.dataset.delBill); });
+  });
+}
+
+function openSupplierModal(id){
+  if(!requireAdmin()) return;
+  editingSupplierId = id;
+  var s = id ? supplierById(id) : null;
+  document.getElementById('modal-supplier-title').textContent = s ? t('تعديل')+' — '+s.name : t('مورد جديد');
+  document.getElementById('modal-supplier-body').innerHTML =
+    '<div class="form-grid">'+
+      '<div class="form-group form-full"><label>'+t('اسم المورد')+' <span class="req">*</span></label>'+
+        '<input type="text" id="sf-sup-name" value="'+esc(s?s.name:'')+'">'+
+        '<span class="error-msg" id="sf-sup-name-err"></span></div>'+
+      '<div class="form-group"><label>'+t('الهاتف')+'</label>'+
+        '<input type="text" id="sf-sup-phone" value="'+esc(s?s.phone||'':'')+'"></div>'+
+      '<div class="form-group"><label>'+t('المدينة')+'</label>'+
+        '<input type="text" id="sf-sup-city" value="'+esc(s?s.city||'':'')+'"></div>'+
+      '<div class="form-group form-full"><label>'+t('الرقم الضريبي / ICE')+'</label>'+
+        '<input type="text" id="sf-sup-tax" value="'+esc(s?s.taxId||'':'')+'"></div>'+
+      '<div class="form-group form-full"><label>'+t('ملاحظات')+'</label>'+
+        '<textarea id="sf-sup-note" rows="2">'+esc(s?s.note||'':'')+'</textarea></div>'+
+    '</div>';
+  openModal('modal-supplier');
+}
+
+function saveSupplier(){
+  var body = document.getElementById('modal-supplier-body');
+  clearInvalid(body);
+  var name = document.getElementById('sf-sup-name').value.trim();
+  if(!name){ markInvalid(document.getElementById('sf-sup-name'),'sf-sup-name-err',t('اسم المورد مطلوب')); toast(t('يرجى تصحيح الحقول المعلّمة'),'error'); return; }
+  ensurePayables();
+  if(editingSupplierId){
+    var s = supplierById(editingSupplierId);
+    s.name=name;
+    s.phone=document.getElementById('sf-sup-phone').value.trim();
+    s.city=document.getElementById('sf-sup-city').value.trim();
+    s.taxId=document.getElementById('sf-sup-tax').value.trim();
+    s.note=document.getElementById('sf-sup-note').value.trim();
+    audit('تعديل مورد', name);
+  }else{
+    DB.suppliers.push({
+      id:uid('sup'), name:name,
+      phone:document.getElementById('sf-sup-phone').value.trim(),
+      city:document.getElementById('sf-sup-city').value.trim(),
+      taxId:document.getElementById('sf-sup-tax').value.trim(),
+      note:document.getElementById('sf-sup-note').value.trim()
+    });
+    audit('إضافة مورد', name);
+  }
+  saveDB();
+  closeModal('modal-supplier');
+  toast(t('تم حفظ المورد'),'success');
+  updateNavCounts();
+  if(currentPage==='supplier-detail') renderSupplierDetail();
+  else renderPage('suppliers');
+}
+
+function deleteSupplier(id){
+  if(!requireAdmin()) return;
+  ensurePayables();
+  var unpaid = DB.bills.some(function(b){ return b.supplierId===id && !b.paid; });
+  if(unpaid){ toast(t('لا يمكن حذف مورد لديه فواتير غير مدفوعة'),'warning'); return; }
+  var s = supplierById(id);
+  confirmAction(t('حذف المورد'), t('هل تريد حذف')+' "'+(s?s.name:'')+'"؟', function(){
+    DB.bills.filter(function(b){ return b.supplierId===id; }).forEach(removeLinkedCosts);
+    DB.bills = DB.bills.filter(function(b){ return b.supplierId!==id; });
+    DB.suppliers = DB.suppliers.filter(function(x){ return x.id!==id; });
+    audit('حذف مورد', s?s.name:'');
+    saveDB(); updateNavCounts();
+    toast(t('تم حذف المورد'),'success');
+    navTo('suppliers');
+  });
+}
+
+function openBillModal(supplierId, billId){
+  if(!requireAdmin()) return;
+  editingBillId = billId;
+  billImageDraft = null;
+  var b = billId ? billById(billId) : null;
+  if(b) billImageDraft = b.imageData||null;
+  var sid = b ? b.supplierId : supplierId;
+  document.getElementById('modal-bill-title').textContent = b ? t('تعديل فاتورة') : t('فاتورة جديدة');
+
+  var plotChecks = DB.plots.map(function(p){
+    var checked = b && b.scope==='plots' && (b.plotIds||[]).indexOf(p.id)>=0 ? ' checked' : '';
+    return '<label><input type="checkbox" class="bf-plot" value="'+p.id+'"'+checked+'> '+esc(t(p.name))+' <span style="color:var(--c-subtle)">('+fmtArea(p.area)+')</span></label>';
+  }).join('');
+  var seasonChecks = DB.seasons.map(function(s){
+    var checked = b && b.scope==='general' && (b.seasonIds||[]).indexOf(s.id)>=0 ? ' checked' : '';
+    return '<label><input type="checkbox" class="bf-season" value="'+s.id+'"'+checked+'> '+esc(t(s.name))+'</label>';
+  }).join('');
+  var scope = b ? b.scope : 'plots';
+  var paid = b ? !!b.paid : false;
+
+  document.getElementById('modal-bill-body').innerHTML =
+    '<div class="form-grid">'+
+      '<div class="form-group form-full"><label>'+t('الوصف / البيان')+' <span class="req">*</span></label>'+
+        '<input type="text" id="bf-desc" value="'+esc(b?b.description||'':'')+'">'+
+        '<span class="error-msg" id="bf-desc-err"></span></div>'+
+      '<div class="form-group"><label>'+t('المبلغ (درهم)')+' <span class="req">*</span></label>'+
+        '<input type="number" id="bf-amount" min="0.01" step="0.01" value="'+(b?b.amount:'')+'">'+
+        '<span class="error-msg" id="bf-amount-err"></span></div>'+
+      '<div class="form-group"><label>'+t('تاريخ الاستحقاق')+' <span class="req">*</span></label>'+
+        '<input type="date" id="bf-due" value="'+esc(b?b.dueDate||'':'')+'">'+
+        '<span class="error-msg" id="bf-due-err"></span></div>'+
+      '<div class="form-group"><label>'+t('مدفوعة؟')+'</label>'+
+        '<select id="bf-paid"><option value="0"'+(paid?'':' selected')+'>'+t('غير مدفوعة')+'</option>'+
+        '<option value="1"'+(paid?' selected':'')+'>'+t('مدفوعة')+'</option></select></div>'+
+      '<div class="form-group" id="bf-paid-date-wrap"><label>'+t('تاريخ الدفع')+'</label>'+
+        '<input type="date" id="bf-paid-date" value="'+esc(b?b.paidDate||'':'')+'"></div>'+
+      '<div class="form-group form-full" id="bf-paid-note-wrap"><label>'+t('ملاحظة الدفع')+'</label>'+
+        '<input type="text" id="bf-paid-note" value="'+esc(b?b.paidNote||'':'')+'" placeholder="'+esc(t('نقداً، تحويل بنكي، شيك...'))+'"></div>'+
+      '<div class="form-group form-full"><label>'+t('نطاق التكلفة')+'</label>'+
+        '<select id="bf-scope"><option value="plots"'+(scope==='plots'?' selected':'')+'>'+t('قطع محددة')+'</option>'+
+        '<option value="general"'+(scope==='general'?' selected':'')+'>'+t('عام (مواسم)')+'</option></select>'+
+        '<span class="hint">'+t('مقسّم حسب المساحة على القطع')+'</span></div>'+
+      '<div class="form-group form-full" id="bf-plots-wrap"><label>'+t('اختر القطع')+'</label>'+
+        '<div class="scope-box">'+plotChecks+'</div><span class="error-msg" id="bf-plots-err"></span></div>'+
+      '<div class="form-group form-full" id="bf-seasons-wrap" style="display:none"><label>'+t('اختر المواسم')+'</label>'+
+        '<div class="scope-box">'+seasonChecks+'</div><span class="error-msg" id="bf-seasons-err"></span></div>'+
+      '<div class="form-group form-full"><label>'+t('صورة الفاتورة')+'</label>'+
+        '<input type="file" id="bf-image" accept="image/*">'+
+        '<span class="hint">'+t('اختياري — تُضغط تلقائياً')+'</span>'+
+        '<div id="bf-image-preview" style="margin-top:8px">'+(billImageDraft?'<img class="bill-thumb" style="width:96px;height:96px" src="'+billImageDraft+'">':'')+'</div></div>'+
+    '</div>';
+  document.getElementById('modal-bill-body').dataset.supplierId = sid;
+  openModal('modal-bill');
+
+  function syncPaid(){
+    var on = document.getElementById('bf-paid').value==='1';
+    document.getElementById('bf-paid-date-wrap').style.display = on?'':'none';
+    document.getElementById('bf-paid-note-wrap').style.display = on?'':'none';
+  }
+  function syncScope(){
+    var g = document.getElementById('bf-scope').value==='general';
+    document.getElementById('bf-plots-wrap').style.display = g?'none':'';
+    document.getElementById('bf-seasons-wrap').style.display = g?'':'none';
+  }
+  document.getElementById('bf-paid').addEventListener('change', syncPaid);
+  document.getElementById('bf-scope').addEventListener('change', syncScope);
+  syncPaid(); syncScope();
+  document.getElementById('bf-image').addEventListener('change', function(){
+    var f = this.files && this.files[0];
+    compressImageFile(f, function(data){
+      billImageDraft = data;
+      document.getElementById('bf-image-preview').innerHTML = data ? '<img class="bill-thumb" style="width:96px;height:96px" src="'+data+'">' : '';
+    });
+  });
+}
+
+function saveBill(){
+  var body = document.getElementById('modal-bill-body');
+  clearInvalid(body);
+  var sid = body.dataset.supplierId;
+  var desc = document.getElementById('bf-desc').value.trim();
+  var amount = parseFloat(document.getElementById('bf-amount').value);
+  var due = document.getElementById('bf-due').value;
+  var paid = document.getElementById('bf-paid').value==='1';
+  var paidDate = document.getElementById('bf-paid-date').value;
+  var paidNote = document.getElementById('bf-paid-note').value.trim();
+  var scope = document.getElementById('bf-scope').value;
+  var plotIds = [].slice.call(document.querySelectorAll('.bf-plot:checked')).map(function(x){ return x.value; });
+  var seasonIds = [].slice.call(document.querySelectorAll('.bf-season:checked')).map(function(x){ return x.value; });
+
+  var ok = true;
+  if(!desc){ markInvalid(document.getElementById('bf-desc'),'bf-desc-err',t('الوصف مطلوب')); ok=false; }
+  if(isNaN(amount)||amount<=0){ markInvalid(document.getElementById('bf-amount'),'bf-amount-err',t('المبلغ يجب أن يكون موجباً')); ok=false; }
+  if(!due){ markInvalid(document.getElementById('bf-due'),'bf-due-err',t('تاريخ الاستحقاق مطلوب')); ok=false; }
+  if(scope==='plots' && !plotIds.length){ markInvalid(document.getElementById('bf-plots-wrap'),'bf-plots-err',t('اختر قطعة واحدة على الأقل')); ok=false; }
+  if(scope==='general' && !seasonIds.length){ markInvalid(document.getElementById('bf-seasons-wrap'),'bf-seasons-err',t('اختر موسماً واحداً على الأقل')); ok=false; }
+  if(!ok){ toast(t('يرجى تصحيح الحقول المعلّمة'),'error'); return; }
+
+  ensurePayables();
+  var supplier = supplierById(sid);
+  var bill;
+  if(editingBillId){
+    bill = billById(editingBillId);
+    bill.description=desc; bill.amount=amount; bill.dueDate=due;
+    bill.paid=paid; bill.paidDate=paid?paidDate:''; bill.paidNote=paid?paidNote:'';
+    bill.scope=scope; bill.plotIds=scope==='plots'?plotIds:[]; bill.seasonIds=scope==='general'?seasonIds:[];
+    bill.imageData = billImageDraft;
+    audit('تعديل فاتورة', desc+' — '+(supplier?supplier.name:''));
+  }else{
+    bill = {
+      id:uid('bill'), supplierId:sid, description:desc, amount:amount, dueDate:due,
+      paid:paid, paidDate:paid?paidDate:'', paidNote:paid?paidNote:'',
+      scope:scope, plotIds:scope==='plots'?plotIds:[], seasonIds:scope==='general'?seasonIds:[],
+      imageData:billImageDraft, linkedCostIds:[], createdAt:today()
+    };
+    DB.bills.push(bill);
+    audit('إضافة فاتورة', desc+' — '+(supplier?supplier.name:''));
+  }
+  applyBillToPlotCosts(bill, supplier);
+  saveDB();
+  closeModal('modal-bill');
+  toast(t('تم حفظ الفاتورة'),'success');
+  updateNavCounts();
+  if(currentPage==='supplier-detail') renderSupplierDetail();
+  else if(currentPage==='dashboard') renderDashboard();
+  else renderSuppliers();
+}
+
+function deleteBill(id){
+  if(!requireAdmin()) return;
+  var b = billById(id);
+  confirmAction(t('حذف الفاتورة'), t('هل تريد حذف')+' "'+(b?b.description:'')+'"؟', function(){
+    if(b) removeLinkedCosts(b);
+    DB.bills = DB.bills.filter(function(x){ return x.id!==id; });
+    audit('حذف فاتورة', b?b.description:'');
+    saveDB(); updateNavCounts();
+    toast(t('تم حذف الفاتورة'),'success');
+    renderSupplierDetail();
+  });
+}
+
+
 /* ─── نافذة القطعة (إضافة/تعديل) ──────────────────────────── */
 var editingPlotId = null;
 
@@ -3650,6 +4244,12 @@ function boot(){
   });
 
   // ── أزرار حفظ النوافذ ──
+  document.getElementById('btn-save-supplier').addEventListener('click',saveSupplier);
+  document.getElementById('btn-save-bill').addEventListener('click',saveBill);
+  document.addEventListener('click', function(e){
+    var a = e.target.closest && e.target.closest('#dash-suppliers-alert');
+    if(a) navTo('suppliers');
+  });
   document.getElementById('btn-save-plot').addEventListener('click',savePlot);
   document.getElementById('btn-save-cost').addEventListener('click',saveCost);
   document.getElementById('btn-save-harvest').addEventListener('click',saveHarvest);
